@@ -2,9 +2,7 @@
 I2SClass I2S;
 
 void setup() {
-  // Open serial communications and wait for port to open:
-  // A baud rate of 115200 is used instead of 9600 for a faster data rate
-  // on non-native USB ports
+  // A baud rate of 115200 is used for a faster and stable data rate
   Serial.begin(115200);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
@@ -22,9 +20,11 @@ void setup() {
 
 void loop() {
   // read a sample
-  int sample = I2S.read();
-
-  if (sample && sample != -1 && sample != 1) {
-    Serial.println(sample);
+  int32_t sample = I2S.read();
+  
+  // Check for valid data before sending
+  if (sample) {
+    // Write the raw 4 bytes of the 32-bit integer directly to the serial port
+    Serial.write((byte *)&sample, sizeof(sample));
   }
 }

@@ -16,14 +16,35 @@ SERIAL_PORT = 'COM4'
 BAUD_RATE = 115200
 
 # Audio settings from your Arduino code
-SAMPLE_RATE = 16000  # 16 kHz
+SAMPLE_RATE = 16000  # 16 kHz, a good balance for speech
 BIT_DEPTH_INPUT = 32 # I2S.read() returns 32-bit data
-BIT_DEPTH_OUTPUT = 16# We will save as 16-bit for compatibility
+BIT_DEPTH_OUTPUT = 32# We will save as 32-bit for wider range and less distortion
 DURATION = 5         # seconds
-GAIN = 500           # A gain factor to amplify the audio signal. I have increased this value. Adjust as needed.
+GAIN = 500           # A gain factor to amplify the audio signal. Adjust as needed.
+
+# Filter settings
+FILTER_CUTOFF_HZ = 150 # High-pass filter cutoff frequency in Hz to remove low-end noise
 
 # Output file name
 OUTPUT_WAV_FILE = 'recording.wav'
+
+# --- Digital Signal Processing ---
+def iir_filter(data, cutoff, sample_rate):
+    """
+    Applies a simple IIR high-pass filter to the audio data.
+    This helps to remove low-frequency noise like hums.
+    """
+    nyquist = 0.5 * sample_rate
+    normalized_cutoff = cutoff / nyquist
+    alpha = 1 - normalized_cutoff
+    
+    y = np.zeros_like(data)
+    y[0] = data[0]
+    
+    for i in range(1, len(data)):
+        y[i] = alpha * y[i-1] + alpha * (data[i] - data[i-1])
+        
+    return y
 
 # --- Main script ---
 def main():
@@ -33,7 +54,7 @@ def main():
     print(f"Connecting to serial port {SERIAL_PORT}...")
     try:
         # Open the serial port
-        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
+        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=None) # timeout is set to None for binary data
     except serial.SerialException as e:
         print(f"Error: Could not open serial port {SERIAL_PORT}. Please check the port name and if the device is connected.")
         print(f"Error details: {e}")
@@ -49,24 +70,23 @@ def main():
     # Get start time to track duration
     start_time = time.time()
     
-    # Read data line by line from the serial port
+    # Read raw binary data from the serial port
     try:
         while len(recorded_samples) < num_samples:
             if time.time() - start_time > DURATION + 2: # Add a small buffer for reading
                 print("Recording timeout. Stopping.")
                 break
+            
+            # Read 4 bytes at a time for each 32-bit integer sample
+            raw_sample = ser.read(4)
+            if len(raw_sample) == 4:
+                # Unpack the raw bytes into a signed 32-bit integer
+                sample = struct.unpack('<i', raw_sample)[0]
                 
-            line = ser.readline().decode('utf-8').strip()
-            if line:
-                try:
-                    # Convert the string to a 32-bit integer sample
-                    sample = int(line)
-                    # Apply a gain factor to the sample to make the audio louder
-                    amplified_sample = int(sample * GAIN)
-                    recorded_samples.append(amplified_sample)
-                except (ValueError, IndexError):
-                    # Ignore lines that are not valid integers
-                    pass
+                # Apply a gain factor to the sample to make the audio louder
+                amplified_sample = int(sample * GAIN)
+                recorded_samples.append(amplified_sample)
+
     except KeyboardInterrupt:
         print("\nRecording stopped by user.")
     finally:
@@ -81,28 +101,22 @@ def main():
 
     print(f"Recorded {len(recorded_samples)} samples.")
     
-    # Convert the 32-bit integer samples to 16-bit samples
-    # This is done by scaling the values down
-    max_val_32bit = 2**31 - 1
-    max_val_16bit = 2**15 - 1
-    
-    samples_32bit_numpy = np.array(recorded_samples, dtype=np.int32)
-    # Clamp values to prevent overflow during conversion
-    samples_32bit_clamped = np.clip(samples_32bit_numpy, -max_val_16bit * (max_val_32bit / max_val_16bit), max_val_16bit * (max_val_32bit / max_val_16bit))
-    
-    # Scale down to 16-bit range
-    samples_16bit_numpy = (samples_32bit_clamped / (max_val_32bit / max_val_16bit)).astype(np.int16)
-    
-    print(f"Saving data to {OUTPUT_WAV_FILE} as 16-bit audio...")
+    # Apply the high-pass filter to the raw data
+    print("Applying high-pass filter to reduce noise...")
+    # Convert recorded_samples to a numpy array for filtering
+    samples_numpy = np.array(recorded_samples, dtype=np.int32)
+    filtered_samples = iir_filter(samples_numpy, FILTER_CUTOFF_HZ, SAMPLE_RATE)
+
+    print(f"Saving data to {OUTPUT_WAV_FILE} as 32-bit audio...")
     try:
         with wave.open(OUTPUT_WAV_FILE, 'w') as wav_file:
-            # Set WAV file parameters for 16-bit output
+            # Set WAV file parameters for 32-bit output
             wav_file.setnchannels(1)  # Mono audio
-            wav_file.setsampwidth(BIT_DEPTH_OUTPUT // 8) # 2 bytes for 16-bit
+            wav_file.setsampwidth(BIT_DEPTH_OUTPUT // 8) # 4 bytes for 32-bit
             wav_file.setframerate(SAMPLE_RATE)
             
-            # Write the 16-bit samples
-            wav_file.writeframes(samples_16bit_numpy.tobytes())
+            # Write the 32-bit samples directly
+            wav_file.writeframes(filtered_samples.tobytes())
             
         print(f"File '{OUTPUT_WAV_FILE}' saved successfully!")
     except Exception as e:
