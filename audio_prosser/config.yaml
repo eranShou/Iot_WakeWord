@@ -1,0 +1,66 @@
+# Audio Processor Configuration File
+# This file contains customizable parameters for audio processing
+
+# Basic Settings
+processing:
+  expected_segments: 5          # Expected number of word segments per file
+  output_directory: "ProcessedSamples"  # Default output directory
+
+# Silence Detection Parameters
+silence_detection:
+  # Primary parameters (most commonly adjusted)
+  min_silence_len: 500          # Minimum silence length in ms (increase for longer pauses)
+  silence_thresh: -40           # Silence threshold in dBFS (increase for louder environments)
+  seek_step: 10                 # Step size for scanning in ms (smaller = more precise but slower)
+
+  # Retry parameters for adaptive detection
+  retry_attempts:
+    - min_silence_len: 500      # Original
+      silence_thresh: -40
+      seek_step: 10
+    - min_silence_len: 300      # More sensitive
+      silence_thresh: -35
+      seek_step: 5
+    - min_silence_len: 700      # Less sensitive
+      silence_thresh: -45
+      seek_step: 15
+    - min_silence_len: 200      # Very sensitive
+      silence_thresh: -30
+      seek_step: 5
+
+# Audio Validation Parameters
+validation:
+  min_duration: 1000            # Minimum audio duration in ms
+  silence_threshold: -50        # dBFS threshold for silence detection
+  max_rms: 1000000             # Maximum RMS value (for corruption detection)
+  sample_rate: 100              # Sample rate for silence checking (ms)
+
+# Segment Filtering Parameters
+segment_filtering:
+  min_segment_length: 200       # Minimum segment length in ms
+  max_segment_length: 3000      # Maximum segment length in ms
+  padding: 100                  # Padding around segments in ms
+
+# Logging Configuration
+logging:
+  level: "INFO"                 # DEBUG, INFO, WARNING, ERROR
+  file_logging: true           # Enable logging to file
+  console_logging: true        # Enable logging to console
+
+# Performance Settings
+performance:
+  enable_progress_bars: true    # Show progress bars during processing
+  enable_multithreading: false  # Enable parallel processing (experimental)
+  max_workers: 4               # Maximum number of worker threads
+
+# Output Settings
+output:
+  generate_report: true         # Generate processing report
+  report_format: "txt"          # Report format: txt, json, csv
+  preserve_originals: true      # Keep original files untouched
+
+# Advanced Settings (usually don't need to change)
+advanced:
+  audio_normalization: false    # Enable audio normalization
+  noise_reduction: false       # Enable noise reduction
+  format_validation: true      # Validate audio file formats
