@@ -1,0 +1,40 @@
+{
+  "model_evaluation": {
+    "error": "Model or test data not available"
+  },
+  "audio_processing": {
+    "sine_440hz": {
+      "mfcc_shape": [
+        40,
+        101
+      ],
+      "mfcc_mean": -14.301219980044209,
+      "mfcc_std": 87.94345039733892,
+      "audio_rms": 0.7071067811865472
+    },
+    "noise": {
+      "mfcc_shape": [
+        40,
+        101
+      ],
+      "mfcc_mean": -4.394602024762206,
+      "mfcc_std": 25.787309551413937,
+      "audio_rms": 0.10132737041014307
+    },
+    "silence": {
+      "mfcc_shape": [
+        40,
+        101
+      ],
+      "mfcc_mean": -28.284271247461902,
+      "mfcc_std": 176.63521732655693,
+      "audio_rms": 0.0
+    }
+  },
+  "performance": {
+    "error": "Model not available for benchmarking"
+  },
+  "edge_cases": {
+    "error": "Model or test data not available"
+  }
+}
