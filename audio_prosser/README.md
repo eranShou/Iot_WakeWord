@@ -1,6 +1,6 @@
 # Voice Sample Audio Processor
 
-A comprehensive Python program that automatically processes voice sample recordings, detects individual word segments using advanced algorithms, and splits them into separate audio files with robust error handling and detailed reporting.
+A comprehensive Python toolkit that automatically processes voice sample recordings, detects individual word segments using advanced algorithms, splits them into separate audio files, and adds background noise for enhanced training data diversity.
 
 ## 🚀 Major Improvements (v2.0)
 
@@ -35,6 +35,9 @@ A comprehensive Python program that automatically processes voice sample recordi
 - **Error Recovery**: Automatic retry with different parameters for failed files
 - **Audio Validation**: Pre-processing validation to detect corrupted files
 - **Flexible Output**: Customizable output directories and naming conventions
+- **Noise Addition**: Automatically add background noise to create diverse training data
+- **Random Time Offsets**: Uses random starting points in noise files for varied augmentation
+- **Multi-format Support**: Processes both WAV and MP3 noise files
 
 ## Requirements
 
@@ -154,6 +157,55 @@ Place `config.yaml` in the same directory as `audio_processor.py`. The program a
 - `-o, --output`: Output directory for processed files (default: ProcessedSamples)
 - `-v, --verbose`: Enable verbose logging for detailed progress information
 
+## Noise Addition Feature
+
+The `noise_adder.py` script enhances your audio dataset by adding background noise to processed samples with random time offsets, creating multiple noisy versions of each audio file for improved machine learning model training. Each sample gets noise from random starting points in the noise files, ensuring varied and realistic audio augmentation.
+
+### Noise Addition Usage
+
+```bash
+# Basic usage - add noise to processed samples
+python noise_adder.py ProcessedSamples noise
+
+# Advanced usage with custom settings
+python noise_adder.py ProcessedSamples noise -o NoisySamples --noise-level -15.0 -v
+```
+
+### Noise Types & Naming Convention
+
+The script automatically maps noise files to short names and creates output files with the pattern `{word}_{number}_{noise}.wav`:
+
+| Noise File | Short Name | Example Output |
+|------------|------------|----------------|
+| `background-factory.wav` | `factory` | `Lehitraot_1_factory.wav` |
+| `cafe.wav` | `cafe` | `Lehitraot_1_cafe.wav` |
+| `convention-crowd.wav` | `crowd` | `Lehitraot_1_crowd.wav` |
+| `inside-car-while-driving.wav` | `car` | `Lehitraot_1_car.wav` |
+| `people-talking.wav` | `talking` | `Lehitraot_1_talking.wav` |
+| `car-honk.wav` | `honk` | `Lehitraot_1_honk.wav` |
+| `rain.mp3` | `rain` | `Lehitraot_1_rain.wav` |
+
+### Noise Addition Options
+
+- `samples_dir`: Path to processed samples directory (required)
+- `noise_dir`: Path to directory containing noise files (required)
+- `-o, --output`: Output directory for noisy files (default: `NoisySamples`)
+- `--noise-level`: Noise volume in dB (default: -20.0, more negative = quieter)
+- `-v, --verbose`: Enable detailed logging
+
+### Complete Workflow Example
+
+```bash
+# 1. Process original audio files
+python audio_processor.py SoundSamples/
+
+# 2. Add noise to create diverse training data
+python noise_adder.py ProcessedSamples noise
+
+# Result: Each processed sample gets 7 noisy versions
+# Lehitraot_1.wav → Lehitraot_1_factory.wav, Lehitraot_1_cafe.wav, etc.
+```
+
 ## How It Works
 
 1. **Discovery**: Scans the input directory for subfolders containing WAV files
@@ -254,6 +306,12 @@ Use the `-v` flag for more detailed console output.
    - Ensure config.yaml is in the same directory as audio_processor.py
    - Check YAML syntax with a YAML validator
    - Install pyyaml: `pip install pyyaml`
+
+7. **Noise addition fails**
+   - Ensure noise files are valid audio formats (WAV/MP3)
+   - Check that ProcessedSamples directory exists and contains WAV files
+   - Install pydub: `pip install pydub`
+   - Verify ffmpeg installation for audio processing
 
 ### Performance Tips
 
