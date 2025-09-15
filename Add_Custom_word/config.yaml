@@ -1,0 +1,39 @@
+# Custom Wake Word Training Configuration
+# Modify these settings to customize the training process
+
+# Audio processing settings
+audio:
+  sample_rate: 16000
+  clip_duration_ms: 1000
+  expected_segments_per_recording: 5
+
+# Noise addition settings
+noise:
+  level_db: -25.0  # More negative = quieter noise
+  max_workers: 4   # Parallel processing workers
+
+# Training settings
+training:
+  model_type: "cnn"  # "cnn" or "simple"
+  epochs: 30
+  batch_size: 16
+  validation_split: 0.1
+  test_split: 0.1
+
+# Output settings
+output:
+  cleanup_intermediates: true  # Delete temporary files after training
+  save_plots: true            # Generate training plots
+  save_confusion_matrix: true  # Generate confusion matrix
+
+# Advanced settings (usually don't need to change)
+advanced:
+  silence_detection:
+    min_silence_len: 500
+    silence_thresh: -40
+    seek_step: 10
+  mfcc:
+    n_mfcc: 40
+    n_fft: 512
+    hop_length: 160
+    window: "hann"

@@ -1,0 +1,18 @@
+2025-09-15 09:00:24,711 - INFO - OptimizedNoiseAdder initialized with samples: ProcessedSamples, noise: noise, output: NoisySamples
+2025-09-15 09:00:24,712 - INFO - Using 8 threads for parallel processing
+2025-09-15 09:00:24,712 - INFO - Optimized noise adder initialized successfully
+2025-09-15 09:00:24,712 - INFO - Discovered 6 mapped noise files
+2025-09-15 09:00:24,718 - INFO - Discovered 200 sample files
+2025-09-15 09:00:24,718 - INFO - Starting parallel noise addition for 200 samples with 6 noise types
+2025-09-15 09:00:24,719 - INFO - Using 8 threads
+2025-09-15 09:00:34,303 - INFO - ==================================================
+2025-09-15 09:00:34,303 - INFO - PARALLEL NOISE ADDITION COMPLETE
+2025-09-15 09:00:34,304 - INFO - Sample files found:     200
+2025-09-15 09:00:34,304 - INFO - Successfully processed: 200
+2025-09-15 09:00:34,304 - INFO - Failed samples:         0
+2025-09-15 09:00:34,304 - INFO - Noise types applied:    6
+2025-09-15 09:00:34,305 - INFO - Total noisy files:      1200
+2025-09-15 09:00:34,305 - INFO - Workers used:           8 threads
+2025-09-15 09:00:34,305 - INFO - ==================================================
+2025-09-15 09:00:34,311 - INFO - Discovered 6 mapped noise files
+2025-09-15 09:00:34,313 - INFO - Optimized noise addition report saved to: NoisySamples\optimized_noise_addition_report_20250915_090034.txt

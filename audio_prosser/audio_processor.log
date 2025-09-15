@@ -934,3 +934,193 @@
 2025-09-14 20:02:24,683 - INFO - Total segments created: 200
 2025-09-14 20:02:24,683 - INFO - ==================================================
 2025-09-14 20:02:24,684 - INFO - Processing report saved to: ProcessedSamples\processing_report_20250914_200224.txt
+2025-09-15 09:00:07,026 - INFO - AudioProcessor initialized with input: SoundSamples/, output: ProcessedSamples
+2025-09-15 09:00:07,029 - INFO - Configuration loaded from config.yaml
+2025-09-15 09:00:07,029 - INFO - Audio processor initialized successfully
+2025-09-15 09:00:07,030 - INFO - Discovered 2 subfolders with WAV files
+2025-09-15 09:00:07,030 - INFO - Starting processing of 2 subfolders
+2025-09-15 09:00:07,052 - INFO - Found 22 audio files in Lehitraot
+2025-09-15 09:00:07,053 - INFO - Processing audio file: Amir-L.wav
+2025-09-15 09:00:07,078 - INFO - Splitting Amir-L.wav into 5 segments
+2025-09-15 09:00:07,088 - INFO - Successfully split Amir-L.wav into 5 segments
+2025-09-15 09:00:07,089 - INFO - Successfully processed Amir-L.wav: created 5 segments
+2025-09-15 09:00:07,090 - INFO - Processing audio file: Badash-L.wav
+2025-09-15 09:00:07,120 - INFO - Splitting Badash-L.wav into 5 segments
+2025-09-15 09:00:07,123 - INFO - Successfully split Badash-L.wav into 5 segments
+2025-09-15 09:00:07,123 - INFO - Successfully processed Badash-L.wav: created 5 segments
+2025-09-15 09:00:07,123 - INFO - Processing audio file: DvirA-L.wav
+2025-09-15 09:00:07,144 - INFO - Splitting DvirA-L.wav into 5 segments
+2025-09-15 09:00:07,154 - INFO - Successfully split DvirA-L.wav into 5 segments
+2025-09-15 09:00:07,155 - INFO - Successfully processed DvirA-L.wav: created 5 segments
+2025-09-15 09:00:07,156 - INFO - Processing audio file: EranShouach-L.wav
+2025-09-15 09:00:07,188 - INFO - Splitting EranShouach-L.wav into 5 segments
+2025-09-15 09:00:07,191 - INFO - Successfully split EranShouach-L.wav into 5 segments
+2025-09-15 09:00:07,191 - INFO - Successfully processed EranShouach-L.wav: created 5 segments
+2025-09-15 09:00:07,192 - INFO - Processing audio file: HalelGrinspan-L.wav
+2025-09-15 09:00:07,230 - INFO - Splitting HalelGrinspan-L.wav into 5 segments
+2025-09-15 09:00:07,237 - INFO - Successfully split HalelGrinspan-L.wav into 5 segments
+2025-09-15 09:00:07,237 - INFO - Successfully processed HalelGrinspan-L.wav: created 5 segments
+2025-09-15 09:00:07,238 - INFO - Processing audio file: ImriS-L.wav
+2025-09-15 09:00:07,259 - INFO - Splitting ImriS-L.wav into 5 segments
+2025-09-15 09:00:07,267 - INFO - Successfully split ImriS-L.wav into 5 segments
+2025-09-15 09:00:07,267 - INFO - Successfully processed ImriS-L.wav: created 5 segments
+2025-09-15 09:00:07,269 - INFO - Processing audio file: LahavG-L.wav
+2025-09-15 09:00:07,290 - INFO - Splitting LahavG-L.wav into 5 segments
+2025-09-15 09:00:07,293 - INFO - Successfully split LahavG-L.wav into 5 segments
+2025-09-15 09:00:07,293 - INFO - Successfully processed LahavG-L.wav: created 5 segments
+2025-09-15 09:00:07,294 - INFO - Processing audio file: May-L.wav
+2025-09-15 09:00:07,317 - INFO - Splitting May-L.wav into 5 segments
+2025-09-15 09:00:07,322 - INFO - Successfully split May-L.wav into 5 segments
+2025-09-15 09:00:07,322 - INFO - Successfully processed May-L.wav: created 5 segments
+2025-09-15 09:00:07,323 - INFO - Processing audio file: MichalGrinspan-L.wav
+2025-09-15 09:00:07,341 - INFO - Splitting MichalGrinspan-L.wav into 5 segments
+2025-09-15 09:00:07,350 - INFO - Successfully split MichalGrinspan-L.wav into 5 segments
+2025-09-15 09:00:07,351 - INFO - Successfully processed MichalGrinspan-L.wav: created 5 segments
+2025-09-15 09:00:07,352 - INFO - Processing audio file: MillyK-L.wav
+2025-09-15 09:00:07,372 - INFO - Splitting MillyK-L.wav into 5 segments
+2025-09-15 09:00:07,376 - INFO - Successfully split MillyK-L.wav into 5 segments
+2025-09-15 09:00:07,376 - INFO - Successfully processed MillyK-L.wav: created 5 segments
+2025-09-15 09:00:07,378 - INFO - Processing audio file: Nimtzo-L.wav
+2025-09-15 09:00:07,440 - WARNING - Best result: Expected 5 segments, detected 4 in Nimtzo-L.wav
+2025-09-15 09:00:07,441 - WARNING - Insufficient segments detected in Nimtzo-L.wav: expected 5, got 4. Skipping file.
+2025-09-15 09:00:07,441 - INFO - Processing audio file: NoamB-L.wav
+2025-09-15 09:00:07,489 - INFO - Splitting NoamB-L.wav into 5 segments
+2025-09-15 09:00:07,492 - INFO - Successfully split NoamB-L.wav into 5 segments
+2025-09-15 09:00:07,492 - INFO - Successfully processed NoamB-L.wav: created 5 segments
+2025-09-15 09:00:07,493 - INFO - Processing audio file: OmriBZ-L.wav
+2025-09-15 09:00:07,508 - INFO - Splitting OmriBZ-L.wav into 5 segments
+2025-09-15 09:00:07,516 - INFO - Successfully split OmriBZ-L.wav into 5 segments
+2025-09-15 09:00:07,517 - INFO - Successfully processed OmriBZ-L.wav: created 5 segments
+2025-09-15 09:00:07,520 - INFO - Processing audio file: OrShwartz-L.wav
+2025-09-15 09:00:07,557 - INFO - Splitting OrShwartz-L.wav into 5 segments
+2025-09-15 09:00:07,560 - INFO - Successfully split OrShwartz-L.wav into 5 segments
+2025-09-15 09:00:07,560 - INFO - Successfully processed OrShwartz-L.wav: created 5 segments
+2025-09-15 09:00:07,561 - INFO - Processing audio file: Razi-L.wav
+2025-09-15 09:00:07,584 - INFO - Splitting Razi-L.wav into 5 segments
+2025-09-15 09:00:07,588 - INFO - Successfully split Razi-L.wav into 5 segments
+2025-09-15 09:00:07,588 - INFO - Successfully processed Razi-L.wav: created 5 segments
+2025-09-15 09:00:07,589 - INFO - Processing audio file: RotemA-L.wav
+2025-09-15 09:00:07,604 - INFO - Splitting RotemA-L.wav into 5 segments
+2025-09-15 09:00:07,607 - INFO - Successfully split RotemA-L.wav into 5 segments
+2025-09-15 09:00:07,607 - INFO - Successfully processed RotemA-L.wav: created 5 segments
+2025-09-15 09:00:07,608 - INFO - Processing audio file: Shahaf-L.wav
+2025-09-15 09:00:07,626 - INFO - Splitting Shahaf-L.wav into 5 segments
+2025-09-15 09:00:07,636 - INFO - Successfully split Shahaf-L.wav into 5 segments
+2025-09-15 09:00:07,637 - INFO - Successfully processed Shahaf-L.wav: created 5 segments
+2025-09-15 09:00:07,637 - INFO - Processing audio file: ShahafP-L.wav
+2025-09-15 09:00:07,656 - INFO - Splitting ShahafP-L.wav into 5 segments
+2025-09-15 09:00:07,662 - INFO - Successfully split ShahafP-L.wav into 5 segments
+2025-09-15 09:00:07,662 - INFO - Successfully processed ShahafP-L.wav: created 5 segments
+2025-09-15 09:00:07,663 - INFO - Processing audio file: Sharon-L.wav
+2025-09-15 09:00:07,707 - WARNING - Best result: Expected 5 segments, detected 0 in Sharon-L.wav
+2025-09-15 09:00:07,707 - WARNING - Insufficient segments detected in Sharon-L.wav: expected 5, got 0. Skipping file.
+2025-09-15 09:00:07,708 - INFO - Processing audio file: ShellyM-L.wav
+2025-09-15 09:00:07,779 - INFO - Splitting ShellyM-L.wav into 5 segments
+2025-09-15 09:00:07,785 - INFO - Successfully split ShellyM-L.wav into 5 segments
+2025-09-15 09:00:07,786 - INFO - Successfully processed ShellyM-L.wav: created 5 segments
+2025-09-15 09:00:07,787 - INFO - Processing audio file: Tamir-L.wav
+2025-09-15 09:00:07,816 - INFO - Splitting Tamir-L.wav into 5 segments
+2025-09-15 09:00:07,823 - INFO - Successfully split Tamir-L.wav into 5 segments
+2025-09-15 09:00:07,823 - INFO - Successfully processed Tamir-L.wav: created 5 segments
+2025-09-15 09:00:07,824 - INFO - Processing audio file: YaelJashek-L.wav
+2025-09-15 09:00:07,844 - INFO - Splitting YaelJashek-L.wav into 5 segments
+2025-09-15 09:00:07,853 - INFO - Successfully split YaelJashek-L.wav into 5 segments
+2025-09-15 09:00:07,853 - INFO - Successfully processed YaelJashek-L.wav: created 5 segments
+2025-09-15 09:00:07,854 - INFO - Subfolder Lehitraot: 20 processed, 2 failed
+2025-09-15 09:00:07,856 - INFO - Found 22 audio files in Shalom
+2025-09-15 09:00:07,856 - INFO - Processing audio file: Amir-S.wav
+2025-09-15 09:00:07,881 - INFO - Splitting Amir-S.wav into 5 segments
+2025-09-15 09:00:07,888 - INFO - Successfully split Amir-S.wav into 5 segments
+2025-09-15 09:00:07,888 - INFO - Successfully processed Amir-S.wav: created 5 segments
+2025-09-15 09:00:07,889 - INFO - Processing audio file: Badash-S.wav
+2025-09-15 09:00:07,904 - INFO - Splitting Badash-S.wav into 5 segments
+2025-09-15 09:00:07,908 - INFO - Successfully split Badash-S.wav into 5 segments
+2025-09-15 09:00:07,908 - INFO - Successfully processed Badash-S.wav: created 5 segments
+2025-09-15 09:00:07,909 - INFO - Processing audio file: DvirA-S.wav
+2025-09-15 09:00:07,928 - INFO - Splitting DvirA-S.wav into 5 segments
+2025-09-15 09:00:07,936 - INFO - Successfully split DvirA-S.wav into 5 segments
+2025-09-15 09:00:07,937 - INFO - Successfully processed DvirA-S.wav: created 5 segments
+2025-09-15 09:00:07,938 - INFO - Processing audio file: EranShouach-S.wav
+2025-09-15 09:00:07,990 - INFO - Splitting EranShouach-S.wav into 5 segments
+2025-09-15 09:00:07,993 - INFO - Successfully split EranShouach-S.wav into 5 segments
+2025-09-15 09:00:07,993 - INFO - Successfully processed EranShouach-S.wav: created 5 segments
+2025-09-15 09:00:07,994 - INFO - Processing audio file: HalelGrinspan-S.wav
+2025-09-15 09:00:08,023 - INFO - Splitting HalelGrinspan-S.wav into 5 segments
+2025-09-15 09:00:08,027 - INFO - Successfully split HalelGrinspan-S.wav into 5 segments
+2025-09-15 09:00:08,027 - INFO - Successfully processed HalelGrinspan-S.wav: created 5 segments
+2025-09-15 09:00:08,028 - INFO - Processing audio file: ImriS-S.wav
+2025-09-15 09:00:08,085 - INFO - Splitting ImriS-S.wav into 5 segments
+2025-09-15 09:00:08,089 - INFO - Successfully split ImriS-S.wav into 5 segments
+2025-09-15 09:00:08,089 - INFO - Successfully processed ImriS-S.wav: created 5 segments
+2025-09-15 09:00:08,090 - INFO - Processing audio file: LahavG-S.wav
+2025-09-15 09:00:08,110 - INFO - Splitting LahavG-S.wav into 5 segments
+2025-09-15 09:00:08,119 - INFO - Successfully split LahavG-S.wav into 5 segments
+2025-09-15 09:00:08,120 - INFO - Successfully processed LahavG-S.wav: created 5 segments
+2025-09-15 09:00:08,121 - INFO - Processing audio file: May-S.wav
+2025-09-15 09:00:08,144 - INFO - Splitting May-S.wav into 5 segments
+2025-09-15 09:00:08,153 - INFO - Successfully split May-S.wav into 5 segments
+2025-09-15 09:00:08,154 - INFO - Successfully processed May-S.wav: created 5 segments
+2025-09-15 09:00:08,155 - INFO - Processing audio file: MichalGrinspan-S.wav
+2025-09-15 09:00:08,197 - INFO - Splitting MichalGrinspan-S.wav into 5 segments
+2025-09-15 09:00:08,206 - INFO - Successfully split MichalGrinspan-S.wav into 5 segments
+2025-09-15 09:00:08,207 - INFO - Successfully processed MichalGrinspan-S.wav: created 5 segments
+2025-09-15 09:00:08,208 - INFO - Processing audio file: MillyK-S.wav
+2025-09-15 09:00:08,223 - INFO - Splitting MillyK-S.wav into 5 segments
+2025-09-15 09:00:08,230 - INFO - Successfully split MillyK-S.wav into 5 segments
+2025-09-15 09:00:08,230 - INFO - Successfully processed MillyK-S.wav: created 5 segments
+2025-09-15 09:00:08,232 - INFO - Processing audio file: Nimtzo-S.wav
+2025-09-15 09:00:08,270 - WARNING - Best result: Expected 5 segments, detected 4 in Nimtzo-S.wav
+2025-09-15 09:00:08,270 - WARNING - Insufficient segments detected in Nimtzo-S.wav: expected 5, got 4. Skipping file.
+2025-09-15 09:00:08,271 - INFO - Processing audio file: NoamB-S.wav
+2025-09-15 09:00:08,285 - INFO - Splitting NoamB-S.wav into 5 segments
+2025-09-15 09:00:08,288 - INFO - Successfully split NoamB-S.wav into 5 segments
+2025-09-15 09:00:08,289 - INFO - Successfully processed NoamB-S.wav: created 5 segments
+2025-09-15 09:00:08,289 - INFO - Processing audio file: OmriBZ-S.wav
+2025-09-15 09:00:08,328 - WARNING - Best result: Expected 5 segments, detected 4 in OmriBZ-S.wav
+2025-09-15 09:00:08,328 - WARNING - Insufficient segments detected in OmriBZ-S.wav: expected 5, got 4. Skipping file.
+2025-09-15 09:00:08,329 - INFO - Processing audio file: OrShwartz-S.wav
+2025-09-15 09:00:08,364 - INFO - Splitting OrShwartz-S.wav into 5 segments
+2025-09-15 09:00:08,373 - INFO - Successfully split OrShwartz-S.wav into 5 segments
+2025-09-15 09:00:08,374 - INFO - Successfully processed OrShwartz-S.wav: created 5 segments
+2025-09-15 09:00:08,375 - INFO - Processing audio file: Razi-S.wav
+2025-09-15 09:00:08,399 - INFO - Splitting Razi-S.wav into 5 segments
+2025-09-15 09:00:08,406 - INFO - Successfully split Razi-S.wav into 5 segments
+2025-09-15 09:00:08,406 - INFO - Successfully processed Razi-S.wav: created 5 segments
+2025-09-15 09:00:08,407 - INFO - Processing audio file: RotemA-S.wav
+2025-09-15 09:00:08,457 - INFO - Splitting RotemA-S.wav into 5 segments
+2025-09-15 09:00:08,460 - INFO - Successfully split RotemA-S.wav into 5 segments
+2025-09-15 09:00:08,460 - INFO - Successfully processed RotemA-S.wav: created 5 segments
+2025-09-15 09:00:08,461 - INFO - Processing audio file: Shahaf-S.wav
+2025-09-15 09:00:08,477 - INFO - Splitting Shahaf-S.wav into 5 segments
+2025-09-15 09:00:08,482 - INFO - Successfully split Shahaf-S.wav into 5 segments
+2025-09-15 09:00:08,482 - INFO - Successfully processed Shahaf-S.wav: created 5 segments
+2025-09-15 09:00:08,484 - INFO - Processing audio file: ShahafP-S.wav
+2025-09-15 09:00:08,500 - INFO - Splitting ShahafP-S.wav into 5 segments
+2025-09-15 09:00:08,505 - INFO - Successfully split ShahafP-S.wav into 5 segments
+2025-09-15 09:00:08,506 - INFO - Successfully processed ShahafP-S.wav: created 5 segments
+2025-09-15 09:00:08,506 - INFO - Processing audio file: Sharon-S.wav
+2025-09-15 09:00:08,556 - INFO - Splitting Sharon-S.wav into 5 segments
+2025-09-15 09:00:08,561 - INFO - Successfully split Sharon-S.wav into 5 segments
+2025-09-15 09:00:08,561 - INFO - Successfully processed Sharon-S.wav: created 5 segments
+2025-09-15 09:00:08,562 - INFO - Processing audio file: ShellyM-S.wav
+2025-09-15 09:00:08,643 - INFO - Splitting ShellyM-S.wav into 5 segments
+2025-09-15 09:00:08,648 - INFO - Successfully split ShellyM-S.wav into 5 segments
+2025-09-15 09:00:08,649 - INFO - Successfully processed ShellyM-S.wav: created 5 segments
+2025-09-15 09:00:08,650 - INFO - Processing audio file: Tamir-S.wav
+2025-09-15 09:00:08,667 - INFO - Splitting Tamir-S.wav into 5 segments
+2025-09-15 09:00:08,674 - INFO - Successfully split Tamir-S.wav into 5 segments
+2025-09-15 09:00:08,674 - INFO - Successfully processed Tamir-S.wav: created 5 segments
+2025-09-15 09:00:08,675 - INFO - Processing audio file: YaelJashek-S.wav
+2025-09-15 09:00:08,692 - INFO - Splitting YaelJashek-S.wav into 5 segments
+2025-09-15 09:00:08,700 - INFO - Successfully split YaelJashek-S.wav into 5 segments
+2025-09-15 09:00:08,702 - INFO - Successfully processed YaelJashek-S.wav: created 5 segments
+2025-09-15 09:00:08,704 - INFO - Subfolder Shalom: 20 processed, 2 failed
+2025-09-15 09:00:08,712 - INFO - ==================================================
+2025-09-15 09:00:08,725 - INFO - PROCESSING COMPLETE
+2025-09-15 09:00:08,736 - INFO - Subfolders processed: 2
+2025-09-15 09:00:08,741 - INFO - Total audio files: 44
+2025-09-15 09:00:08,744 - INFO - Successfully processed: 40
+2025-09-15 09:00:08,750 - INFO - Failed files: 4
+2025-09-15 09:00:08,753 - INFO - Total segments created: 200
+2025-09-15 09:00:08,756 - INFO - ==================================================
+2025-09-15 09:00:08,765 - INFO - Processing report saved to: ProcessedSamples\processing_report_20250915_090008.txt
