@@ -2,6 +2,13 @@
   
 ## Details about the project
  Wake Word Optimization On Xiao ESP32S3
+
+1. edge impulse model using controller mic
+    * code for the recording using sd card is in `ESP32\record-to-sd\record-to-sd.ino` - this was write using GPT
+    * code for the runnig of the model is in `ESP32\ei\ei.ino`
+    * training and running of the model according to `https://www.youtube.com/watch?v=0X0vkzMOAA0` tutorial
+
+
 ## Folder description :
 * ESP32: source code for the esp side (firmware).
 * Documentation: wiring diagram + basic operating instructions
