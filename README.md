@@ -11,7 +11,8 @@
 * Assets: link to 3D printed parts, Audio files used in this project, Fritzing file for connection diagram (FZZ format) etc
 
 ## ESP32 SDK version used in this project: 
-2.0.17
+ei-sd: 2.0.16
+mic_check,record-to-sd: 3.3.0
 
 
 ## Arduino/ESP32 libraries used in this project:
