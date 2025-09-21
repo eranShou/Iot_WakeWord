@@ -5,3 +5,9 @@ audio_prosser/ProcessedSamples/
 audio_prosser/NoisySamples/
 tensorflow_wake_word_detection/ProcessedSamples/
 tensorflow_wake_word_detection/processed_data/
+
+# Ivrit-ai dataset outputs and secrets
+ivrit-ai dataset/audio_v2_downloaded/
+ivrit-ai dataset/transcripts_v2_downloaded/
+ivrit-ai dataset/secrets.py
+ivrit-ai dataset/__pycache__

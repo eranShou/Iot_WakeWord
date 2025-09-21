@@ -1,0 +1,10 @@
+# Requirements for IvritAiDataFetch.py
+requests
+huggingface_hub
+pydub
+ffmpeg-python
+gzip
+
+# Note: You must also install the ffmpeg executable on your system for pydub to work.
+# Download from: https://ffmpeg.org/download.html
+
