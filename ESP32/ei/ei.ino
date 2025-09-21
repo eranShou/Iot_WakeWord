@@ -44,7 +44,7 @@
   
 
 /* Includes ---------------------------------------------------------------- */
-#include <XiaoS3-wake-word_inferencing.h>
+#include <XiaoS3-wake-word-outsideaudio_inferencing.h>
 
 #include <I2S.h>
 #define SAMPLE_RATE 16000U
@@ -70,6 +70,8 @@ static bool record_status = true;
  * @brief      Arduino setup function
  */
 void setup() {
+  //boot error debug - light on = code run;
+  digitalWrite(LED_BUILTIN, LOW);
   // put your setup code here, to run once:
   Serial.begin(115200);
   // comment out the below line to cancel the wait for USB connection (needed for native USB)
@@ -78,7 +80,6 @@ void setup() {
   Serial.println("Edge Impulse Inferencing Demo");
 
   pinMode(LED_BUILTIN, OUTPUT);     // Set the pin as output
-  digitalWrite(LED_BUILTIN, HIGH);  //Turn off
 
   I2S.setAllPins(-1, 42, 41, -1, -1);
   if (!I2S.begin(PDM_MONO_MODE, SAMPLE_RATE, SAMPLE_BITS)) {
@@ -148,19 +149,6 @@ void loop() {
     }
 
   }
-      // Display inference result
-    if (pred_index == 0) {
-      if (pred_value > 0.80) {
-        digitalWrite(LED_BUILTIN, HIGH);  //Turn off
-        Serial.println("LED OFF");
-      }
-    }
-    if (pred_index == 2) {
-      if (pred_value > 0.80) {
-        digitalWrite(LED_BUILTIN, LOW);  //Turn on
-        Serial.println("LED ON");
-      }
-    }
 
 
 #if EI_CLASSIFIER_HAS_ANOMALY == 1

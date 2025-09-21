@@ -7,6 +7,9 @@
     * code for the recording using sd card is in `ESP32\record-to-sd\record-to-sd.ino` - this was write using GPT
     * code for the runnig of the model is in `ESP32\ei\ei.ino`
     * training and running of the model according to `https://www.youtube.com/watch?v=0X0vkzMOAA0` tutorial
+    notes:
+        1. training without unknown key gives a lot of flase positive - meaning every word that not sound like noise is classefied to one of the labels
+        
 
 
 ## Folder description :
