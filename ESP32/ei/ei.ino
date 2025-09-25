@@ -65,10 +65,30 @@ static const uint32_t sample_buffer_size = 2048;
 static signed short sampleBuffer[sample_buffer_size];
 static bool debug_nn = false;  // Set this to true to see e.g. features generated from the raw signal
 static bool record_status = true;
+static const int noiseIndex = 2;
+static const int unknownIndex = 3;
+static const double WAKE_WORD_TRESHHOLD = 0.9;
+static int pred_counters[EI_CLASSIFIER_LABEL_COUNT];
 
 /**
  * @brief      Arduino setup function
  */
+
+
+void printPrediction(ei_impulse_result_t result) {
+  // print the predictions
+  ei_printf("Predictions ");
+  ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
+            result.timing.dsp, result.timing.classification, result.timing.anomaly);
+  ei_printf(": \n");
+  for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+    ei_printf("    %s: ", result.classification[ix].label);
+    ei_printf_float(result.classification[ix].value);
+    ei_printf("\n");
+
+  }
+}
+
 void setup() {
   //boot error debug - light on = code run;
   digitalWrite(LED_BUILTIN, LOW);
@@ -86,6 +106,10 @@ void setup() {
     Serial.println("Failed to initialize I2S!");
     while (1)
       ;
+  }
+
+  for ( size_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+    pred_counters[i] = 0;
   }
 
   // summary of inferencing settings (from model_metadata.h)
@@ -133,21 +157,23 @@ void loop() {
   int pred_index = 0;    // Initialize pred_index
   float pred_value = 0;  // Initialize pred_value
 
-  // print the predictions
-  ei_printf("Predictions ");
-  ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
-            result.timing.dsp, result.timing.classification, result.timing.anomaly);
-  ei_printf(": \n");
   for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
-    ei_printf("    %s: ", result.classification[ix].label);
-    ei_printf_float(result.classification[ix].value);
-    ei_printf("\n");
-
     if (result.classification[ix].value > pred_value) {
       pred_index = ix;
       pred_value = result.classification[ix].value;
     }
+  }
 
+  if (pred_index != noiseIndex) {
+    if ( result.classification[pred_index].value > WAKE_WORD_TRESHHOLD || pred_index == unknownIndex)
+      pred_counters[pred_index] ++;
+    printPrediction(result);
+
+    for(size_t i =0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+      ei_printf("    %s: ", result.classification[i].label);
+      ei_printf("%d times", pred_counters[i]);
+      ei_printf("\n");
+    }
   }
 
 

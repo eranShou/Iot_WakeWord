@@ -1,0 +1,50 @@
+tests:
+
+AUDOIO FROM MIC
+treshhold for wake words: 0.9
+
+
+shalom test:
+
+lehit: 21 times
+shalom: 36 times
+unknown: 48 times
+
+lehit test:
+
+lehit: 41 times
+shalom: 1 times
+unknown: 63 times
+
+
+unknown test:
+
+lehit: 23 times
+shalom: 3 times
+unknown: 79 times
+
+
+
+OUT SOURCE AUDIO
+treshhold for wake words: 0.9
+
+
+shalom test:
+
+Shalom: 33 times
+lehit: 8 times
+unknown: 64 times
+
+lehit test:
+
+Shalom: 1 times
+lehit: 49 times
+unknown: 55 times
+
+
+unknown test:
+
+Shalom: 26 times
+lehit: 18 times
+noise: 0 times
+unknown: 58 times
