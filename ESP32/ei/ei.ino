@@ -44,7 +44,7 @@
   
 
 /* Includes ---------------------------------------------------------------- */
-#include <XiaoS3-wake-word-outsideaudio_inferencing.h>
+#include <XiaoS3-wake-word_inferencing.h>
 
 #include <I2S.h>
 #define SAMPLE_RATE 16000U
@@ -65,9 +65,8 @@ static const uint32_t sample_buffer_size = 2048;
 static signed short sampleBuffer[sample_buffer_size];
 static bool debug_nn = false;  // Set this to true to see e.g. features generated from the raw signal
 static bool record_status = true;
-static const int noiseIndex = 2;
+static int noiseIndex = 2;
 static const int unknownIndex = 3;
-static const double WAKE_WORD_TRESHHOLD = 0.9;
 static int pred_counters[EI_CLASSIFIER_LABEL_COUNT];
 
 /**
@@ -158,6 +157,8 @@ void loop() {
   float pred_value = 0;  // Initialize pred_value
 
   for (size_t ix = 0; ix < EI_CLASSIFIER_LABEL_COUNT; ix++) {
+    if (strcmp(result.classification[ix].label, "noise") == 0)
+      noiseIndex = ix;
     if (result.classification[ix].value > pred_value) {
       pred_index = ix;
       pred_value = result.classification[ix].value;
@@ -165,8 +166,7 @@ void loop() {
   }
 
   if (pred_index != noiseIndex) {
-    if ( result.classification[pred_index].value > WAKE_WORD_TRESHHOLD || pred_index == unknownIndex)
-      pred_counters[pred_index] ++;
+    pred_counters[pred_index] ++;
     printPrediction(result);
 
     for(size_t i =0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {

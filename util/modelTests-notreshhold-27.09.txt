@@ -1,0 +1,45 @@
+Model test no TRESHHOLD
+
+outside audio:
+
+shalom test:
+
+Shalom: 23 times
+lehit: 9 times
+unknown: 27 times
+
+lehit test:
+
+Shalom: 3 times
+lehit: 29 times
+unknown: 18 times
+
+unkown test:
+
+Shalom: 11 times
+lehit: 16 times
+noise: 0 times
+unknown: 23 times
+
+
+mic audio:
+
+shalom:
+
+lehit: 0 times
+shalom: 38 times
+unknown: 12 times
+
+lehit:
+
+lehit: 23 times
+noise: 0 times
+shalom: 0 times
+unknown: 28 times
+
+
+unknown:
+
+lehit: 13 times
+shalom: 12 times
+unknown: 25 times
