@@ -71,7 +71,7 @@ python data_preprocessing.py --data_dir ../ --output_dir ../processed_data
 python model_training.py --data_path ../processed_data/hebrew_wake_word_data.npz
 
 # Convert to TFLite Micro
-python model_conversion.py --model_path ../models/hebrew_wake_word_model_cnn.h5
+python model_conversion.py --model_path models/hebrew_wake_word_model_cnn.h5
 ```
 
 ### 2. Setup ESP32-S3
