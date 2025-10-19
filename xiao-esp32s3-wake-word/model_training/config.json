@@ -1,0 +1,63 @@
+{
+  "audio": {
+    "sample_rate": 16000,
+    "duration_seconds": 1.0,
+    "num_samples": 16000,
+    "channels": 1
+  },
+  "spectrogram": {
+    "frame_length": 255,
+    "frame_step": 128,
+    "fft_length": 256,
+    "target_height": 32,
+    "target_width": 32
+  },
+  "model": {
+    "input_shape": [32, 32, 1],
+    "conv1_filters": 16,
+    "conv1_kernel": 3,
+    "conv2_filters": 32,
+    "conv2_kernel": 3,
+    "pool_size": 2,
+    "dropout1_rate": 0.25,
+    "dense_units": 64,
+    "dropout2_rate": 0.5,
+    "num_classes": 4
+  },
+  "training": {
+    "batch_size": 32,
+    "epochs": 50,
+    "learning_rate": 0.001,
+    "early_stopping_patience": 5,
+    "validation_split_noise_unknown": 0.2
+  },
+  "classes": {
+    "labels": ["lehitraoot", "shalom", "background", "unknown"],
+    "label_map": {
+      "lehitraoot": 0,
+      "shalom": 1,
+      "background": 2,
+      "unknown": 3
+    }
+  },
+  "data_paths": {
+    "lehitraoot": "../augmented_dataset/lehitraoot",
+    "shalom": "../augmented_dataset/shalom",
+    "background": "../augmented_dataset/background",
+    "unknown": "../augmented_dataset/unknown"
+  },
+  "output": {
+    "model_dir": "models",
+    "keras_model": "models/wake_word_model.h5",
+    "tflite_model": "models/wake_word_model.tflite",
+    "model_header": "models/wake_word_model.h",
+    "config_header": "models/model_config.h",
+    "training_history": "models/training_history.png",
+    "confusion_matrix": "models/confusion_matrix.png"
+  },
+  "esp32": {
+    "tensor_arena_size": 8000,
+    "confidence_threshold": 0.7,
+    "deployment_dir": "../esp32s3_deployment"
+  }
+}
