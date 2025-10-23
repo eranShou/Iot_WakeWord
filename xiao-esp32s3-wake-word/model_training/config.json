@@ -10,7 +10,8 @@
     "frame_step": 128,
     "fft_length": 256,
     "target_height": 32,
-    "target_width": 32
+    "target_width": 32,
+    "note": "Direct 32x32 computation without resize - matches ESP32 implementation"
   },
   "model": {
     "input_shape": [32, 32, 1],
@@ -26,9 +27,9 @@
   },
   "training": {
     "batch_size": 32,
-    "epochs": 50,
-    "learning_rate": 0.001,
-    "early_stopping_patience": 5,
+    "epochs": 100,
+    "learning_rate": 0.0005,
+    "early_stopping_patience": 10,
     "validation_split_noise_unknown": 0.2
   },
   "classes": {

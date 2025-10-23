@@ -1,13 +1,13 @@
 # Hebrew Wake Word Detection - Training Pipeline
 
-Complete TensorFlow training pipeline for Hebrew wake word detection (lehitraoot and shaloom) with ESP32-S3 deployment. All configuration centralized in `config.json` with zero magic numbers.
+Complete TensorFlow training pipeline for Hebrew wake word detection (lehitraoot and shalom) with ESP32-S3 deployment. All configuration centralized in `config.json` with zero magic numbers.
 
 ## Overview
 
 This pipeline trains a CNN model on 4 classes:
 - **lehitraoot** (wake word 1)
-- **shaloom** (wake word 2) 
-- **noise** (background noise)
+- **shalom** (wake word 2) 
+- **background** (background noise)
 - **unknown** (negative samples)
 
 The trained model is automatically converted to TFLite format and deployed to ESP32-S3 for real-time inference.
@@ -34,24 +34,19 @@ That's it! The pipeline will:
 The pipeline expects this data structure:
 
 ```
-data/
-├── augmented/
-│   ├── lehitraoot/     # 619 training samples
-│   └── shaloom/        # 437 training samples
-├── ivrit-ai/          # NEW: Additional Hebrew speech data
-│   ├── lehitraoot/     # Extracted from crowd-recital dataset
-│   └── shaloom/        # Extracted from crowd-recital dataset
-├── lehitraoot/         # 36 validation samples
-├── shaloom/           # 26 validation samples
-├── noise/             # 128 samples (80/20 split)
-└── unknown/           # 140 samples (80/20 split)
+augmented_dataset/
+├── lehitraoot/         # 1728 training samples
+├── shalom/            # 1896 training samples  
+├── background/        # 120 background noise samples
+└── unknown/           # 2140 negative samples
 ```
 
-**Enhanced Training Data:**
-- **Existing augmented data**: 619 lehitraoot + 437 shaloom
-- **ivrit-ai dataset**: Additional Hebrew speech recordings
-- **Total training samples**: Significantly increased for better accuracy
-- **Model size**: Reduced to <500KB for ESP32-S3 compatibility
+**Training Data:**
+- **lehitraoot**: 1728 augmented samples
+- **shalom**: 1896 augmented samples
+- **background**: 120 background noise samples
+- **unknown**: 2140 negative samples
+- **Model size**: Optimized for ESP32-S3 compatibility
 
 ## Configuration
 
@@ -67,17 +62,28 @@ All parameters are in `config.json` - no magic numbers in code:
 }
 ```
 
-### Model Architecture (Reduced for <500KB)
+### Spectrogram Configuration
+```json
+"spectrogram": {
+  "frame_length": 255,
+  "frame_step": 128,
+  "fft_length": 256,
+  "target_height": 32,
+  "target_width": 32
+}
+```
+
+### Model Architecture (Optimized for ESP32-S3)
 ```json
 "model": {
   "input_shape": [32, 32, 1],
-  "conv1_filters": 16,      // Reduced from 32
+  "conv1_filters": 16,
   "conv1_kernel": 3,
-  "conv2_filters": 32,      // Reduced from 64
+  "conv2_filters": 32,
   "conv2_kernel": 3,
   "pool_size": 2,
   "dropout1_rate": 0.25,
-  "dense_units": 64,        // Reduced from 128
+  "dense_units": 64,
   "dropout2_rate": 0.5,
   "num_classes": 4
 }
@@ -87,10 +93,23 @@ All parameters are in `config.json` - no magic numbers in code:
 ```json
 "training": {
   "batch_size": 32,
-  "epochs": 50,
-  "learning_rate": 0.001,
-  "early_stopping_patience": 5,
+  "epochs": 100,
+  "learning_rate": 0.0005,
+  "early_stopping_patience": 10,
   "validation_split_noise_unknown": 0.2
+}
+```
+
+### Class Configuration
+```json
+"classes": {
+  "labels": ["lehitraoot", "shalom", "background", "unknown"],
+  "label_map": {
+    "lehitraoot": 0,
+    "shalom": 1,
+    "background": 2,
+    "unknown": 3
+  }
 }
 ```
 
@@ -98,7 +117,7 @@ All parameters are in `config.json` - no magic numbers in code:
 
 ### 1. Dataset Preparation (`prepare_dataset.py`)
 - Loads 4 classes with proper train/validation split
-- Converts audio to spectrograms using STFT
+- Converts audio to spectrograms using custom STFT
 - Applies class weighting for balanced training
 - Returns TensorFlow datasets with batching/caching
 
@@ -110,7 +129,7 @@ All parameters are in `config.json` - no magic numbers in code:
 
 ### 3. TFLite Conversion (`convert_to_tflite.py`)
 - Converts Keras model to TFLite (float32, no quantization)
-- Verifies model size (<100KB for ESP32-S3)
+- Verifies model size for ESP32-S3 compatibility
 - Tests inference with sample data
 
 ### 4. Header Generation (`generate_header.py`)
@@ -123,6 +142,17 @@ All parameters are in `config.json` - no magic numbers in code:
 - Verifies deployment success
 - Prints Arduino integration instructions
 
+### 6. Custom STFT (`custom_stft.py`)
+- Pure Python FFT implementation matching ESP32 C++ code
+- Ensures perfect alignment between training and inference
+- Radix-2 FFT with bit-reversal permutation
+
+### 7. Pipeline Testing (`test_pipeline.py`)
+- Verifies data paths and file counts
+- Tests model architecture optimization
+- Validates configuration parameters
+- Checks ESP32 compatibility constraints
+
 ## Usage
 
 ### Single Command Execution
@@ -132,8 +162,8 @@ python run_pipeline.py
 
 ### Individual Steps
 ```bash
-# Download ivrit-ai dataset (optional, for additional training data)
-python download_ivrit_dataset.py
+# Test pipeline configuration
+python test_pipeline.py
 
 # Prepare dataset
 python prepare_dataset.py
@@ -172,23 +202,28 @@ models/
 
 ## Expected Performance
 
-- **Overall accuracy**: >85% (improved with additional ivrit-ai data)
-- **Wake word accuracy**: >90% (lehitraoot, shaloom)
-- **Model size**: <500KB (reduced architecture)
+- **Overall accuracy**: >85% (with augmented dataset)
+- **Wake word accuracy**: >90% (lehitraoot, shalom)
+- **Model size**: Optimized for ESP32-S3
 - **Training time**: <30 minutes
 - **ESP32 inference**: <1 second latency
 
-## New Features
+## Key Features
 
-### Enhanced Dataset
-- **ivrit-ai/crowd-recital integration**: Additional Hebrew speech data
-- **Automatic download**: Downloads and processes dataset during training
-- **Improved accuracy**: More training data leads to better model performance
+### Custom STFT Implementation
+- **Perfect alignment**: Python training matches ESP32 C++ inference exactly
+- **Radix-2 FFT**: Pure Python implementation with bit-reversal permutation
+- **No dependencies**: Custom FFT ensures consistent results across platforms
 
-### Optimized Model Size
-- **Reduced architecture**: Smaller CNN for <500KB model size
-- **ESP32-S3 compatible**: Optimized for microcontroller deployment
-- **Maintained accuracy**: Smaller model with better training data
+### Optimized Model Architecture
+- **ESP32-S3 compatible**: Designed for microcontroller deployment
+- **Efficient spectrograms**: 32x32 input with optimized FFT parameters
+- **Balanced training**: Class weighting for imbalanced datasets
+
+### Comprehensive Testing
+- **Pipeline validation**: Automated testing of all components
+- **Data verification**: Checks file counts and paths
+- **Model validation**: Ensures architecture meets ESP32 constraints
 
 ## Troubleshooting
 
@@ -219,7 +254,7 @@ pip install -r requirements.txt
 ### Configuration Tips
 
 **For Better Accuracy:**
-- Increase `epochs` to 100
+- Increase `epochs` to 200
 - Adjust `learning_rate` (0.0001 to 0.01)
 - Increase model complexity
 
@@ -229,7 +264,7 @@ pip install -r requirements.txt
 - Use fewer training samples
 
 **For ESP32 Compatibility:**
-- Keep model size <100KB
+- Keep model size <6MB
 - Use simple architecture
 - Avoid complex operations
 
@@ -240,7 +275,7 @@ After training, the generated headers are automatically deployed to `../esp32s3_
 ### Arduino Setup
 1. Install libraries:
    - TensorFlowLite_ESP32
-   - ESP_I2S
+
 
 2. Include headers in your sketch:
 ```cpp
@@ -261,7 +296,7 @@ After training, the generated headers are automatically deployed to `../esp32s3_
 
 // Class labels
 const char* CLASS_LABELS[NUM_CLASSES] = {
-  "lehitraoot", "shaloom", "noise", "unknown"
+  "lehitraoot", "shalom", "background", "unknown"
 };
 ```
 
@@ -316,11 +351,13 @@ model_training/
 ├── config.json              # Central configuration
 ├── requirements.txt         # Python dependencies
 ├── run_pipeline.py         # Main pipeline script
+├── test_pipeline.py     # Pipeline testing
 ├── prepare_dataset.py      # Dataset loading
 ├── train_model.py          # Model training
 ├── convert_to_tflite.py    # TFLite conversion
 ├── generate_header.py      # C header generation
 ├── deploy_esp32.py         # ESP32 deployment
+├── custom_stft.py          # Custom STFT implementation
 ├── README.md              # This file
 └── models/                 # Output directory
     ├── wake_word_model.h5

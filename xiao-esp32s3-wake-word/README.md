@@ -43,7 +43,7 @@ python record_audio.py
 
 **Recording Guidelines:**
 - Record **50 samples** of each wake word ("lehitraoot", "shalom")
-- Record **2 minute** of background noise (silence or ambient sound)
+- Record **3 minute** of background noise (silence or ambient sound)
 - Organize recordings in separate folders:
   ```
   recordings/
@@ -98,60 +98,20 @@ audio_prosser/data/
 
 Transfer processed audio files to the main database directory.
 
-#### Method A: Use Existing Script
-```bash
-cd database/
-python copy_data.py
-```
-*Copies files from `ivrit-ai_DB_extraction/data/` to `database/`*
-
-#### Method B: Manual Transfer (if script doesn't exist)
-Create a simple transfer script:
-
-```python
-# transfer_to_database.py - NEEDS TO BE CREATED
-import shutil
-import os
-from pathlib import Path
-
-def transfer_data():
-    source = Path("audio_prosser/data")
-    target = Path("database")
-    
-    # Copy all audio files to database
-    for subdir in source.iterdir():
-        if subdir.is_dir():
-            target_subdir = target / subdir.name
-            target_subdir.mkdir(exist_ok=True)
-            
-            for file in subdir.glob("*.wav"):
-                shutil.copy2(file, target_subdir)
-    
-    print("Data transfer completed!")
-
-if __name__ == "__main__":
-    transfer_data()
-```
-
-**Run the transfer:**
-```bash
-python transfer_to_database.py
-```
-
 **Final Database Structure:**
 ```
 database/
 ├── lehitraoot/
 │   ├── lehitraoot_001.wav
-│   └── ... (38 files)
+│   └── ... 
 ├── shalom/
 │   ├── shalom_001.wav
-│   └── ... (80 files)
+│   └── ... 
 ├── background/
 │   ├── background_001.wav
-│   └── ... (120 files)
+│   └── ... 
 └── unknown/
-    └── ... (2140 files from external dataset)
+    └── ... 
 ```
 
 ---
@@ -211,24 +171,7 @@ python run_pipeline.py
 5. **ESP32 Deployment** - Copy files to deployment directory
 
 **Configuration:**
-All settings are in `config.json`:
-```json
-{
-  "audio": {
-    "sample_rate": 16000,
-    "duration_seconds": 1.0
-  },
-  "model": {
-    "input_shape": [32, 32, 1],
-    "num_classes": 4
-  },
-  "training": {
-    "batch_size": 32,
-    "epochs": 50,
-    "learning_rate": 0.001
-  }
-}
-```
+All settings are in `config.json`
 
 **Output Files:**
 ```
@@ -248,9 +191,9 @@ models/
 Deploy the trained model to ESP32-S3 for real-time inference.
 
 #### Arduino IDE Setup
-1. Install **ESP32 board support**
+1. Install **ESP32 board support** (Board Manager version 2.0.16)
 2. Install libraries:
-   - **ESP_I2S** (for PDM microphone)
+   - **I2S** (for PDM microphone)
    - **TensorFlowLite_ESP32** (for inference)
 
 #### Board Configuration
@@ -271,14 +214,14 @@ cd esp32s3_deployment/
 pip install pyserial
 
 # Start receiving WAV files
-python receive_wav_files.py --port COM3
+python receiver.py
 ```
 
 **Real-time Features:**
 - **Continuous listening**: Sliding window detection every 500ms
-- **5-class detection**: lehitraoot, shalom, bait, background, unknown
+- **4-class detection**: lehitraoot, shalom, background, unknown
 - **Confidence scoring**: Detailed confidence levels for all classes
-- **Audio transmission**: WAV files sent via serial with timestamps
+- **Audio transmission**: WAV files sent via serial
 
 ## 📁 Project Structure
 
@@ -334,29 +277,6 @@ xiao-esp32s3-wake-word/
 - **Confidence Threshold**: 0.7
 - **Memory**: Uses PSRAM for large buffers
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**1. ESP32 Not Detected**
-- Install CH340/CP210x drivers
-- Check Device Manager for COM port
-- Try different USB cable
-
-**2. Audio Recording Issues**
-- Ensure microphone is not obstructed
-- Speak clearly towards the microphone hole
-- Check audio levels in serial monitor
-
-**3. Model Training Problems**
-- Verify all audio files are in correct directories
-- Check class balance in dataset
-- Reduce batch size if memory issues occur
-
-**4. ESP32 Deployment Issues**
-- Enable PSRAM in board settings
-- Increase tensor arena size if needed
-- Check model file size (<500KB)
 
 ## 📊 Expected Performance
 
@@ -379,9 +299,9 @@ Edit `model_training/config.json`:
 ```json
 {
   "model": {
-    "conv1_filters": 32,
-    "conv2_filters": 64,
-    "dense_units": 128
+    "conv1_filters": 16,
+    "conv2_filters": 32,
+    "dense_units": 64
   }
 }
 ```
@@ -392,9 +312,6 @@ Modify audio settings in respective configuration files:
 - Training: `model_training/config.json`
 - Deployment: `esp32s3_deployment/config.h`
 
-## 📄 License
-
-This project is part of the Hebrew wake word detection system for ESP32-S3 microcontrollers.
 
 ## 🤝 Contributing
 
@@ -406,10 +323,9 @@ This project is part of the Hebrew wake word detection system for ESP32-S3 micro
 ## 📞 Support
 
 For issues or questions:
-1. Check the troubleshooting section above
+1. Review configuration files for correctness
 2. Verify your hardware setup matches requirements
 3. Ensure all dependencies are properly installed
-4. Review configuration files for correctness
 
 ---
 

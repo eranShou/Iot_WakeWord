@@ -10,7 +10,7 @@ Real-time Hebrew wake word detection system for ESP32-S3 with continuous PDM mic
 
 ## Features
 
-- **5-class wake word detection**: lehitraoot, shalom, bait, background, unknown
+- **4-class wake word detection**: lehitraoot, shalom, background, unknown
 - **Continuous listening**: Sliding window detection every 500ms
 - **Real-time inference**: STFT spectrogram processing with TFLite Micro
 - **Audio transmission**: WAV files sent via serial with confidence scores in filename
@@ -27,7 +27,6 @@ Real-time Hebrew wake word detection system for ESP32-S3 with continuous PDM mic
    - Tools → Board → Boards Manager → Search "ESP32" → Install
 
 3. Install required libraries:
-   - **ESP_I2S** library (for PDM microphone)
    - **TensorFlowLite_ESP32** library (for inference)
 
 ### 2. Board Configuration
@@ -74,15 +73,11 @@ Starting continuous wake word detection...
 Listening for Hebrew wake words:
   0: lehitraoot
   1: shalom
-  2: bait
-  3: background
-  4: unknown
+  2: background
+  3: unknown
 ```
 
 ### 2. Receive WAV Files on PC
-
-#### Option A: Python Script (Recommended)
-
 1. Install Python 3 and required packages:
    ```bash
    pip install pyserial
@@ -90,22 +85,14 @@ Listening for Hebrew wake words:
 
 2. Run the receiver script:
    ```bash
-   # List available ports
-   python receive_wav_files.py --list-ports
-   
    # Start receiving (Windows)
-   python receive_wav_files.py --port COM3
-   
-   # Start receiving (Linux/Mac)
-   python receive_wav_files.py --port /dev/ttyUSB0
+   python receiver.py --port COM5
    ```
 
 3. The script will:
    - Create a `received_wavs/` directory
    - Receive WAV files with detailed filenames
    - Show progress and save files automatically
-
-#### Option B: Manual Serial Capture
 
 1. Use a serial terminal program (PuTTY, Tera Term, etc.)
 2. Set baud rate to 921600
@@ -118,23 +105,23 @@ Listening for Hebrew wake words:
 
 ```
 Inference #1: background (0.234)
-Confidences: [0.123, 0.045, 0.067, 0.234, 0.531]
+Confidences: [0.123, 0.045, 0.234, 0.531]
 Audio level: 0.045 (max: 0.123)
 
 *** WAKE WORD DETECTED #1 ***
 Class: shalom, Confidence: 0.856
-Sending: shalom_20241019_143052_conf[0.045, 0.856, 0.034, 0.023, 0.042].wav
+Sending: shalom_20241019_143052_conf[0.045, 0.856, 0.023, 0.042].wav
 ```
 
 #### WAV File Names
 
 Files are named with format: `{class}_{timestamp}_conf[{all_scores}].wav`
 
-Example: `shalom_20241019_143052_conf[0.045,0.856,0.034,0.023,0.042].wav`
+Example: `shalom_20241019_143052_conf[0.045,0.856,0.023,0.042].wav`
 
 - **shalom**: Predicted class
 - **20241019_143052**: Date and time
-- **[0.045,0.856,0.034,0.023,0.042]**: Confidence scores for all 5 classes
+- **[0.045,0.856,0.023,0.042]**: Confidence scores for all 4 classes
 
 ## Configuration
 
@@ -142,7 +129,7 @@ All settings are in `config.h` and reference `model_config.h`:
 
 - **Window stride**: 500ms (adjustable)
 - **Confidence threshold**: 0.7 (adjustable)
-- **Cooldown period**: 2000ms (prevents duplicate detections)
+- **Cooldown period**: 300ms (prevents duplicate detections)
 - **Memory allocation**: Optimized for ESP32-S3 with PSRAM
 
 ## Troubleshooting
@@ -166,6 +153,16 @@ All settings are in `config.h` and reference `model_config.h`:
    - Check audio levels in serial monitor
    - Ensure microphone is not obstructed
 
+5. **"Serial port not found"**
+   - Install proper USB drivers for XIAO ESP32-S3
+   - Check Device Manager (Windows) or `ls /dev/tty*` (Linux/Mac)
+   - Try different USB cable or port
+
+6. **"WAV files corrupted"**
+   - Ensure receiver script is running before ESP32 starts sending
+   - Check serial connection stability
+   - Verify baud rate matches (921600)
+
 ### Performance Optimization
 
 - **Reduce inference frequency**: Increase `WINDOW_STRIDE_MS`
@@ -184,17 +181,54 @@ esp32s3_deployment/
 ├── mic_config.h                # Microphone settings
 ├── model_config.h              # Model configuration
 ├── wake_word_model.h           # TFLite model data
-├── receive_wav_files.py        # PC receiver script
+├── receiver.py                 # PC receiver script
 └── README.md                   # This file
 ```
+
+## System Architecture
+
+### Audio Processing Pipeline
+1. **Audio Capture**: PDM microphone → 16kHz mono audio
+2. **Windowing**: 1-second sliding windows with 500ms stride
+3. **STFT Processing**: Convert audio to 32×32 spectrogram
+4. **ML Inference**: TFLite CNN model → 5-class probabilities
+5. **Detection**: Confidence threshold filtering + cooldown period
+6. **Transmission**: WAV file sent via serial with metadata
+
+### Memory Layout
+- **PSRAM**: Audio buffers (32KB), spectrogram (4KB), WAV buffer (32KB)
+- **Internal RAM**: Tensor arena (200KB), inference buffers
+- **Flash**: Model data (2MB), program code
 
 ## Model Information
 
 - **Architecture**: CNN with 2 conv layers, max pooling, dropout, dense layer
 - **Input**: 32×32×1 spectrogram (STFT of 1-second 16kHz audio)
-- **Output**: 5 class probabilities
+- **Output**: 4 class probabilities
 - **Size**: ~2MB (compiled for ESP32-S3)
 - **Training**: Hebrew wake words with data augmentation
+
+## Quick Start
+
+1. **Hardware Setup**: Connect XIAO ESP32-S3 via USB
+2. **Software Setup**: Install Arduino IDE, ESP32 board support, and required libraries
+3. **Configuration**: Set board to XIAO_ESP32S3 with PSRAM enabled
+4. **Upload**: Flash the `esp32s3_deployment.ino` sketch
+5. **Run**: Start the receiver script on PC: `python receiver.py --port COM5`
+6. **Test**: Speak Hebrew wake words ("lehitraoot", "shalom") and check for detections
+
+## Development
+
+### Building from Source
+- All source files are in the `esp32s3_deployment/` directory
+- Model files are generated from the `model_training/` pipeline
+- Configuration is managed through `config.h` and `model_config.h`
+
+### Customization
+- **Wake words**: Modify class labels in `model_config.h`
+- **Sensitivity**: Adjust `CONFIDENCE_THRESHOLD` in `config.h`
+- **Performance**: Tune `WINDOW_STRIDE_MS` for inference frequency
+- **Memory**: Optimize buffer sizes based on available PSRAM
 
 ## License
 

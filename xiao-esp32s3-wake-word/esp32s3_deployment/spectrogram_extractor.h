@@ -47,14 +47,11 @@ private:
     // Compute real FFT and magnitude spectrum
     void computeFFTMagnitude(const float* frame, float* magnitude, int fftLength);
     
-    // Resize spectrogram from original size to 32x32
-    void resizeSpectrogram(const float* input, float* output, 
-                          int inputHeight, int inputWidth,
-                          int outputHeight, int outputWidth);
+    // Custom FFT implementation matching Python exactly
+    void performFFT(float* real, float* imag, int n);
     
-    // Bilinear interpolation for resizing
-    float bilinearInterpolate(const float* data, int width, int height,
-                             float x, float y);
+    // Bit-reversal permutation for FFT
+    void bitReversePermutation(float* real, float* imag, int n);
     
     // Allocate workspace buffers
     bool allocateBuffers();
@@ -111,15 +108,14 @@ bool SpectrogramExtractor::computeSTFT(const int16_t* audio, float* spectrogram)
         return false;
     }
     
-    // Use fewer frames for faster processing
-    // Calculate number of frames (reduced for speed)
-    int numFrames = min((NUM_SAMPLES - FRAME_LENGTH) / FRAME_STEP + 1, SPECTROGRAM_HEIGHT);
+    // Calculate number of frames exactly as in training config
+    const int numFrames = min((NUM_SAMPLES - FRAME_LENGTH) / FRAME_STEP + 1, SPECTROGRAM_HEIGHT);
     
     // Clear output spectrogram
     memset(spectrogram, 0, SPECTROGRAM_BUFFER_SIZE * sizeof(float));
     
-    // Process frames with larger step for speed
-    int frameStep = max(FRAME_STEP * 2, 1); // Double the frame step for speed
+    // Use configured frame step (match training)
+    const int frameStep = FRAME_STEP;
     
     for (int frame = 0; frame < numFrames; frame++) {
         int frameStart = frame * frameStep;
@@ -127,21 +123,29 @@ bool SpectrogramExtractor::computeSTFT(const int16_t* audio, float* spectrogram)
         // Skip if we don't have enough samples
         if (frameStart + FRAME_LENGTH > NUM_SAMPLES) break;
         
-        // Extract frame and apply window (simplified)
+        // Extract frame and apply Hann window
         for (int i = 0; i < FRAME_LENGTH; i++) {
             windowBuffer[i] = audio[frameStart + i] / 32768.0f; // Normalize to [-1, 1]
         }
+        applyHannWindow(windowBuffer, FRAME_LENGTH);
         
-        // Apply simplified windowing (faster than full Hann window)
-        for (int i = 0; i < FRAME_LENGTH; i++) {
-            float window = 0.5f * (1.0f - cosf(2.0f * PI * i / (FRAME_LENGTH - 1)));
-            windowBuffer[i] *= window;
+        // Pad frame to FFT length if needed
+        float* paddedFrame = windowBuffer;
+        if (FRAME_LENGTH < FFT_LENGTH) {
+            // Pad with zeros
+            for (int i = FRAME_LENGTH; i < FFT_LENGTH; i++) {
+                windowBuffer[i] = 0.0f;
+            }
+        } else if (FRAME_LENGTH > FFT_LENGTH) {
+            // Truncate to FFT length
+            paddedFrame = windowBuffer;
         }
         
-        // Compute simplified magnitude spectrum
-        computeFFTMagnitude(windowBuffer, magnitudeBuffer, FFT_LENGTH);
+        // Compute real FFT magnitude spectrum
+        computeFFTMagnitude(paddedFrame, magnitudeBuffer, FFT_LENGTH);
         
         // Store magnitude spectrum in output spectrogram
+        // Only use first half of FFT result (positive frequencies)
         for (int i = 0; i < FFT_LENGTH / 2 && i < SPECTROGRAM_WIDTH; i++) {
             spectrogram[frame * SPECTROGRAM_WIDTH + i] = magnitudeBuffer[i];
         }
@@ -164,73 +168,27 @@ void SpectrogramExtractor::applyHannWindow(float* frame, int frameLength) {
 }
 
 void SpectrogramExtractor::computeFFTMagnitude(const float* frame, float* magnitude, int fftLength) {
-    // Simplified and much faster implementation
-    // Use a lightweight approach that's suitable for real-time processing
+    // Real FFT implementation matching Python custom_fft exactly
+    // Use complex FFT workspace
+    float* real = fftBuffer;
+    float* imag = fftBuffer + fftLength;
     
-    // For now, use a simple energy-based approach instead of full FFT
-    // This gives reasonable spectrogram-like features much faster
+    // Initialize with frame data
+    for (int i = 0; i < fftLength; i++) {
+        real[i] = frame[i];
+        imag[i] = 0.0f;
+    }
     
+    // Perform FFT
+    performFFT(real, imag, fftLength);
+    
+    // Compute magnitude spectrum
     int numBins = fftLength / 2;
-    int samplesPerBin = FRAME_LENGTH / numBins;
-    
     for (int k = 0; k < numBins; k++) {
-        float energy = 0.0f;
-        int startIdx = k * samplesPerBin;
-        int endIdx = min(startIdx + samplesPerBin, FRAME_LENGTH);
-        
-        // Calculate energy in this frequency bin
-        for (int i = startIdx; i < endIdx; i++) {
-            energy += frame[i] * frame[i];
-        }
-        
-        // Convert to magnitude (square root of energy)
-        magnitude[k] = sqrtf(energy);
+        magnitude[k] = sqrtf(real[k] * real[k] + imag[k] * imag[k]);
     }
 }
 
-void SpectrogramExtractor::resizeSpectrogram(const float* input, float* output,
-                                           int inputHeight, int inputWidth,
-                                           int outputHeight, int outputWidth) {
-    float scaleY = (float)inputHeight / outputHeight;
-    float scaleX = (float)inputWidth / outputWidth;
-    
-    for (int y = 0; y < outputHeight; y++) {
-        for (int x = 0; x < outputWidth; x++) {
-            float srcY = y * scaleY;
-            float srcX = x * scaleX;
-            
-            float value = bilinearInterpolate(input, inputWidth, inputHeight, srcX, srcY);
-            output[y * outputWidth + x] = value;
-        }
-    }
-}
-
-float SpectrogramExtractor::bilinearInterpolate(const float* data, int width, int height,
-                                              float x, float y) {
-    int x1 = (int)floor(x);
-    int y1 = (int)floor(y);
-    int x2 = x1 + 1;
-    int y2 = y1 + 1;
-    
-    // Clamp coordinates
-    x1 = max(0, min(width - 1, x1));
-    y1 = max(0, min(height - 1, y1));
-    x2 = max(0, min(width - 1, x2));
-    y2 = max(0, min(height - 1, y2));
-    
-    float fx = x - x1;
-    float fy = y - y1;
-    
-    float f11 = data[y1 * width + x1];
-    float f12 = data[y2 * width + x1];
-    float f21 = data[y1 * width + x2];
-    float f22 = data[y2 * width + x2];
-    
-    float f1 = f11 * (1 - fx) + f21 * fx;
-    float f2 = f12 * (1 - fx) + f22 * fx;
-    
-    return f1 * (1 - fy) + f2 * fy;
-}
 
 bool SpectrogramExtractor::allocateBuffers() {
     Serial.println("Allocating spectrogram buffers...");
@@ -296,6 +254,71 @@ void SpectrogramExtractor::freeBuffers() {
 void SpectrogramExtractor::generateHannWindow() {
     for (int i = 0; i < FRAME_LENGTH; i++) {
         hannWindow[i] = 0.5f * (1.0f - cosf(2.0f * PI * i / (FRAME_LENGTH - 1)));
+    }
+}
+
+void SpectrogramExtractor::performFFT(float* real, float* imag, int n) {
+    // Radix-2 FFT implementation matching Python custom_fft exactly
+    
+    // Bit-reversal permutation
+    bitReversePermutation(real, imag, n);
+    
+    // FFT computation (Cooley-Tukey)
+    for (int length = 2; length <= n; length <<= 1) {
+        float angle = -2.0f * PI / length;
+        float wlen_real = cosf(angle);
+        float wlen_imag = sinf(angle);
+        
+        for (int i = 0; i < n; i += length) {
+            float w_real = 1.0f;
+            float w_imag = 0.0f;
+            
+            for (int j = 0; j < length / 2; j++) {
+                int u = i + j;
+                int v = i + j + length / 2;
+                
+                float t_real = w_real * real[v] - w_imag * imag[v];
+                float t_imag = w_real * imag[v] + w_imag * real[v];
+                
+                real[v] = real[u] - t_real;
+                imag[v] = imag[u] - t_imag;
+                real[u] += t_real;
+                imag[u] += t_imag;
+                
+                float next_w_real = w_real * wlen_real - w_imag * wlen_imag;
+                float next_w_imag = w_real * wlen_imag + w_imag * wlen_real;
+                w_real = next_w_real;
+                w_imag = next_w_imag;
+            }
+        }
+    }
+}
+
+void SpectrogramExtractor::bitReversePermutation(float* real, float* imag, int n) {
+    // Bit-reversal permutation matching Python implementation
+    for (int i = 0; i < n; i++) {
+        int j = 0;
+        int temp = i;
+        int log2n = 0;
+        int temp_n = n;
+        while (temp_n >>= 1) log2n++;
+        
+        for (int k = 0; k < log2n; k++) {
+            j = (j << 1) | (temp & 1);
+            temp >>= 1;
+        }
+        
+        if (i < j) {
+            // Swap real parts
+            float temp_real = real[i];
+            real[i] = real[j];
+            real[j] = temp_real;
+            
+            // Swap imaginary parts
+            float temp_imag = imag[i];
+            imag[i] = imag[j];
+            imag[j] = temp_imag;
+        }
     }
 }
 
