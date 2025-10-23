@@ -37,8 +37,9 @@
 * Assets: link to 3D printed parts, Audio files used in this project, Fritzing file for connection diagram (FZZ format) etc
 
 ## ESP32 SDK version used in this project: 
-ei-sd: 2.0.16
-mic_check,record-to-sd: 3.3.0
+ei: 2.0.16
+record to sd: 3.3.0
+tensorflow Lite Micro:  
 
 
 ## Arduino/ESP32 libraries used in this project:
@@ -49,6 +50,10 @@ for record to sd:
 
 for edge impulse:
 * I2S.h
+* ei costume library
+
+TensorFlow Lite Micro:
+
 
 
 ## Connection diagram:
