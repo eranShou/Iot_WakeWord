@@ -11,3 +11,14 @@ ivrit-ai dataset/audio_v2_downloaded/
 ivrit-ai dataset/transcripts_v2_downloaded/
 ivrit-ai dataset/secrets.py
 ivrit-ai dataset/__pycache__
+
+# Augmented dataset
+augmented_dataset/
+
+# Database directory (excluding README.md)
+database/
+!database/README.md
+
+# Recordings
+xiao-esp32s3-wake-word/audio_recorder_esp32_pc/recordings/
+xiao-esp32s3-wake-word/esp32s3_deployment/received_wavs/

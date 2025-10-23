@@ -40,9 +40,11 @@ pip install pyserial
 ### 2. Upload Arduino Sketch
 
 1. Open `audio_recorder_esp32_pc.ino` in Arduino IDE
-2. Select board: `Tools` → `Board` → `ESP32 Arduino` → **`XIAO_ESP32S3`**
-3. Select the correct port: `Tools` → `Port` → (your COM port)
-4. Click Upload ⬆️ (no need to hold BOOT button on XIAO!)
+2. **Install ESP32 Board Manager 3.3.0:** `Tools` → `Board` → `Boards Manager` → Search "ESP32" → Install **version 3.3.0**
+3. Select board: `Tools` → `Board` → `ESP32 Arduino` → **`XIAO_ESP32S3``
+4. **Enable PSRAM:** `Tools` → `PSRAM` → **`OPI PSRAM`** (required for audio recording)
+5. Select the correct port: `Tools` → `Port` → (your COM port)
+6. Click Upload ⬆️ (no need to hold BOOT button on XIAO!)
 
 ### 3. Run the Python Script
 
