@@ -13,6 +13,9 @@
     part of the data collection we use whatapp audio (translate to .wav files) to create our own data set - all the data is in the drive
 
     #### using ivrit.ai
+    ivrit.ai is an open source project for generation of Hebrew speech samples through processing and segmentation of transcribed podcast recordings `https://www.ivrit.ai/`
+    1. code to the API to generate dataset in hebrew - `ivrit-ai dataset/IvritAiDataFetch.py`
+    2. usage: 
 
 
 ### 2. edge impulse model
