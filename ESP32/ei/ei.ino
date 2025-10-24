@@ -44,13 +44,15 @@
   
 
 /* Includes ---------------------------------------------------------------- */
-#include <XiaoS3-wake-word_inferencing.h>
+#include <XiaoS3-wakeword-ivirit-ai_inferencing.h>
+
 
 #include <I2S.h>
 #define SAMPLE_RATE 16000U
 #define SAMPLE_BITS 16
 
-
+// [NEW CODE] Global counter for indexed logging
+static int32_t log_index = 0;
 
 /** Audio buffers, pointers and selectors */
 typedef struct {
@@ -65,8 +67,8 @@ static const uint32_t sample_buffer_size = 2048;
 static signed short sampleBuffer[sample_buffer_size];
 static bool debug_nn = false;  // Set this to true to see e.g. features generated from the raw signal
 static bool record_status = true;
-static int noiseIndex = 2;
-static const int unknownIndex = 3;
+static int noiseIndex = 0;
+static const int unknownIndex = 1;
 static int pred_counters[EI_CLASSIFIER_LABEL_COUNT];
 
 /**
@@ -75,6 +77,15 @@ static int pred_counters[EI_CLASSIFIER_LABEL_COUNT];
 
 
 void printPrediction(ei_impulse_result_t result) {
+  
+  //Print and Increment Index
+  ei_printf("[%ld] ", log_index);
+  log_index++;
+  // Check for wrap-around from max positive to min negative (int32_t overflow)
+  if (log_index < 0) { 
+      log_index = 0;
+  }
+  
   // print the predictions
   ei_printf("Predictions ");
   ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
@@ -97,6 +108,19 @@ void setup() {
   while (!Serial)
     ;
   Serial.println("Edge Impulse Inferencing Demo");
+  
+  //Print CSV Header
+  ei_printf("CSV_LOG:Index,Predicted_Label,Confidence,DSP_ms,Classification_ms");
+  #if EI_CLASSIFIER_HAS_ANOMALY == 1
+    ei_printf(",Anomaly_Score");
+  #endif
+  
+  // Add columns for each label's total detection count
+  for (size_t i = 0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+    ei_printf(",%s_Total_Detections", ei_classifier_inferencing_categories[i]);
+  }
+  ei_printf("\n");
+
 
   pinMode(LED_BUILTIN, OUTPUT);     // Set the pin as output
 
@@ -166,22 +190,32 @@ void loop() {
   }
 
   if (pred_index != noiseIndex) {
-    pred_counters[pred_index] ++;
+
+    // Print the verbose log (which now includes the index)
     printPrediction(result);
+    
+    // 2. Print a single line in CSV format for easy data logging
+    ei_printf("CSV_LOG:%ld", log_index - 1); // Use log_index - 1 since printPrediction already incremented it
+    ei_printf(",%s", result.classification[pred_index].label); 
+    ei_printf_float(pred_value);
+    ei_printf(",%d", result.timing.dsp); 
+    ei_printf(",%d", result.timing.classification); 
 
-    for(size_t i =0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
-      ei_printf("    %s: ", result.classification[i].label);
-      ei_printf("%d times", pred_counters[i]);
-      ei_printf("\n");
-    }
-  }
-
-
+    // Handle Anomaly Score
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
-  ei_printf("    anomaly score: ");
-  ei_printf_float(result.anomaly);
-  ei_printf("\n");
+    ei_printf(",");
+    ei_printf_float(result.anomaly);
+#else
+    ei_printf(",0.00"); // Use 0.00 as a placeholder if Anomaly is not used
 #endif
+
+    // Print all detection counters
+    for(size_t i =0; i < EI_CLASSIFIER_LABEL_COUNT; i++) {
+      ei_printf(",%d", pred_counters[i]); 
+    }
+    ei_printf("\n");
+
+  }
 }
 
 static void audio_inference_callback(uint32_t n_bytes) {

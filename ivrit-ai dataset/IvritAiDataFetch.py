@@ -1,20 +1,16 @@
-
 import os
 import requests
 from huggingface_hub import hf_hub_download, HfApi, Repository
 import gzip
 import json
 from pydub import AudioSegment
-
-
-
-# Load secrets from secrets.py
 import sys
+
+
+
 sys.path.append(os.path.dirname(__file__))
 from secrets import HF_TOKEN
 
-
-# ================== Refactored as a class ==================
 
 class IvritAiDataFetcher:
     def __init__(self, hf_token=HF_TOKEN):
@@ -30,7 +26,23 @@ class IvritAiDataFetcher:
         os.makedirs(self.OUTPUT_TRANSCRIPTS_DIR, exist_ok=True)
         os.makedirs(self.OUTPUT_WORD_CLIPS_DIR, exist_ok=True)
         self.api = HfApi()
+    
+    def list_transcripts_root_folders(self):
+        """
+        List all top-level folders in the HuggingFace transcripts repository (not recursive).
+        Returns a list of folder names.
+        """
+        items = self.api.list_repo_tree(
+            self.DATASET_ID_TRANSCRIPTS,
+            recursive=False,
+            repo_type="dataset",
+            token=self.HF_TOKEN
+        )
 
+        folder_names = [item.path for item in items if item.__class__.__name__ == 'RepoFolder']
+        print("Folder names:", folder_names)
+        return folder_names
+    
     def _download_file(self, dataset_id, file_path, local_path):
         url = f"https://huggingface.co/datasets/{dataset_id}/resolve/main/{file_path}"
         resp = requests.get(url, headers=self.headers, stream=True)
@@ -46,13 +58,25 @@ class IvritAiDataFetcher:
         audio_extensions = [".mp3", ".m4a", ".wav", ".flac"]
         transcript_file = episode_path.rstrip("/\\") + "/full_transcript.json.gz"
         local_transcript = os.path.join(self.OUTPUT_TRANSCRIPTS_DIR, episode_path.replace("/", "_") + "_transcript.json.gz")
-        try:
-            self._download_file(self.DATASET_ID_TRANSCRIPTS, transcript_file, local_transcript)
-        except Exception as e:
-            print(f"Error downloading transcript for {episode_path}: {e}")
+
+        # Check if the transcript file already exists locally
+        if os.path.exists(local_transcript):
+            print(f"Transcript already downloaded: {local_transcript}")
+        else:
+            try:
+                self._download_file(self.DATASET_ID_TRANSCRIPTS, transcript_file, local_transcript)
+            except Exception as e:
+                print(f"Error downloading transcript for {episode_path}: {e}")
+
         for ext in audio_extensions:
             audio_file = episode_path + ext
             local_audio = os.path.join(self.OUTPUT_AUDIO_DIR, episode_path.replace("/", "_") + ext)
+
+            # Check if the audio file already exists locally
+            if os.path.exists(local_audio):
+                print(f"Audio already downloaded: {local_audio}")
+                break
+
             try:
                 self._download_file(self.DATASET_ID_AUDIO, audio_file, local_audio)
                 break
@@ -137,7 +161,7 @@ class IvritAiDataFetcher:
 if __name__ == "__main__":
     fetcher = IvritAiDataFetcher()
     # Download episodes example
-    fetcher.download_episodes(path="בזמן שעבדתם", max_per_day=5)
+    #fetcher.download_episodes(path="בזמן שעבדתם", max_per_day=5)
     # Extract word clips example
     words_to_extract = ["שלום"]
     fetcher.extract_word_clips(words_to_extract)
