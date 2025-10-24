@@ -12,6 +12,7 @@ import librosa
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
+from custom_stft import compute_stft_custom
 
 def load_config():
     """Load configuration from config.json"""
@@ -57,23 +58,20 @@ def load_audio_files(directory, sample_rate, num_samples):
 
 def create_spectrogram(audio, frame_length, frame_step, fft_length, target_height, target_width):
     """
-    Convert audio to spectrogram and resize to target dimensions
+    Convert audio to spectrogram using custom STFT implementation
+    Computes 32x32 spectrogram directly without resize
     """
-    # Compute STFT
-    stft = tf.signal.stft(
-        audio,
-        frame_length=frame_length,
-        frame_step=frame_step,
-        fft_length=fft_length
+    # Use custom STFT implementation that matches ESP32 C++ exactly
+    spectrogram = compute_stft_custom(
+        audio, 
+        frame_length, 
+        frame_step, 
+        fft_length, 
+        target_height, 
+        target_width
     )
     
-    # Convert to magnitude spectrogram
-    magnitude = tf.abs(stft)
-    
-    # Resize to target dimensions
-    magnitude = tf.image.resize(magnitude[..., tf.newaxis], [target_height, target_width])
-    
-    return magnitude
+    return spectrogram
 
 def prepare_datasets():
     """

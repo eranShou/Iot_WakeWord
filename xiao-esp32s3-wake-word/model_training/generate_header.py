@@ -110,7 +110,7 @@ def generate_config_header(config):
 // ============================================================================
 
 #define SAMPLE_RATE {audio_config['sample_rate']}
-#define DURATION_SECONDS {audio_config['duration_seconds']}
+#define DURATION_SECONDS {int(audio_config['duration_seconds'])}
 #define NUM_SAMPLES {audio_config['num_samples']}
 #define NUM_CHANNELS {audio_config['channels']}
 

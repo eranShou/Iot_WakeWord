@@ -15,3 +15,15 @@ ivrit-ai dataset/random_word_snippets
 ivrit-ai dataset/secrets.py
 ivrit-ai dataset/__pycache__
 venv/
+
+# Augmented dataset
+augmented_dataset/
+
+# Database directory (excluding README.md)
+database/
+!database/README.md
+
+# Recordings
+xiao-esp32s3-wake-word/audio_recorder_esp32_pc/recordings/
+xiao-esp32s3-wake-word/esp32s3_deployment/received_wavs/
+xiao-esp32s3-wake-word/audio_prosser/data/

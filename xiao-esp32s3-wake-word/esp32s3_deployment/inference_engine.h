@@ -1,8 +1,7 @@
 /*
  * Inference Engine Header
- * Simplified inference engine for wake word detection
- * TODO: Integrate with TensorFlow Lite Micro when library compatibility is resolved
- * Based on model_config.h settings - no magic numbers
+ * TensorFlow Lite Micro inference for wake word detection
+ * Uses model settings from model_config.h and runtime limits from config.h
  */
 
 #ifndef INFERENCE_ENGINE_H
@@ -11,72 +10,125 @@
 #include <Arduino.h>
 #include "config.h"
 #include "model_config.h"
+#include "wake_word_model.h"
+
+// Workaround for FlatBuffers span assignment issue in some Arduino builds
+#ifndef FLATBUFFERS_SPAN_MINIMAL
+#define FLATBUFFERS_SPAN_MINIMAL
+#endif
+
+// TFLite Micro includes
+#include <TensorFlowLite_ESP32.h>
+#include "tensorflow/lite/c/common.h"
+#include "tensorflow/lite/micro/all_ops_resolver.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+#include "tensorflow/lite/micro/micro_allocator.h"
+#include "tensorflow/lite/micro/micro_error_reporter.h"
+#include "tensorflow/lite/schema/schema_generated.h"
 
 class InferenceEngine {
 private:
-    // Simplified inference components (placeholder for TFLite integration)
     bool isInitialized;
-    
-    // Mock inference results for testing
-    float mock_probabilities[NUM_CLASSES];
-    int mock_inference_count;
-    
+
+    // TFLite Micro state
+    const tflite::Model* model;
+    tflite::AllOpsResolver resolver;
+    tflite::MicroAllocator* allocator;
+    tflite::MicroErrorReporter errorReporter;
+    tflite::MicroInterpreter* interpreter;
+    TfLiteTensor* input;
+    TfLiteTensor* output;
+
+    // Aligned tensor arena
+    alignas(16) static uint8_t tensorArena[TFLITE_TENSOR_ARENA_SIZE];
+
 public:
     InferenceEngine();
     ~InferenceEngine();
-    
-    // Initialize inference engine (simplified version)
+
+    // Initialize TFLite Micro
     bool init();
-    
-    // Run inference on spectrogram (mock implementation for testing)
+
+    // Run inference on a 32x32x1 float spectrogram
     bool runInference(const float* spectrogram, float* probabilities);
-    
+
     // Get best class prediction and confidence
     int getBestClass(const float* probabilities, float& confidence);
-    
-    // Check if inference engine is ready
+
+    // Status and info
     bool isReady() const { return isInitialized; }
-    
-    // Get model info (placeholder)
-    size_t getModelSize() const { return 2121588; } // 2.07 MB
-    
-    // Get tensor arena size (placeholder)
+    size_t getModelSize() const { return sizeof(wake_word_model); }
     size_t getTensorArenaSize() const { return TFLITE_TENSOR_ARENA_SIZE; }
-    
-private:
-    // Generate mock probabilities for testing (simulates different wake words)
-    void generateMockProbabilities(float* probabilities);
 };
 
 // ============================================================================
 // IMPLEMENTATION
 // ============================================================================
 
+uint8_t InferenceEngine::tensorArena[TFLITE_TENSOR_ARENA_SIZE];
+
 InferenceEngine::InferenceEngine() 
     : isInitialized(false)
-    , mock_inference_count(0) {
+    , model(nullptr)
+    , resolver()
+    , allocator(nullptr)
+    , interpreter(nullptr)
+    , input(nullptr)
+    , output(nullptr) {
 }
 
 InferenceEngine::~InferenceEngine() {
-    // Simplified destructor - no dynamic memory to free
+    if (interpreter) { delete interpreter; interpreter = nullptr; }
+    // allocator is created in tensor arena; no delete
+    model = nullptr;
+    input = nullptr;
+    output = nullptr;
 }
 
 bool InferenceEngine::init() {
-    Serial.println("Initializing InferenceEngine (Simplified Version)...");
-    
-    // Initialize mock probabilities
-    for (int i = 0; i < NUM_CLASSES; i++) {
-        mock_probabilities[i] = 0.0f;
+    Serial.println("Initializing InferenceEngine (TFLite Micro)...");
+
+    // Map the model
+    model = tflite::GetModel(wake_word_model);
+    if (model->version() != TFLITE_SCHEMA_VERSION) {
+        Serial.printf("ERROR: Model schema %d != supported %d\n", model->version(), TFLITE_SCHEMA_VERSION);
+        return false;
     }
-    
+
+    // Create allocator on the tensor arena
+    allocator = tflite::MicroAllocator::Create(tensorArena, sizeof(tensorArena), &errorReporter);
+
+    // Create interpreter (allocator-based API)
+    interpreter = new tflite::MicroInterpreter(model, resolver, allocator, &errorReporter, /*resource_vars=*/nullptr, /*profiler=*/nullptr);
+
+    // Allocate tensors
+    TfLiteStatus allocStatus = interpreter->AllocateTensors();
+    if (allocStatus != kTfLiteOk) {
+        Serial.println("ERROR: AllocateTensors failed");
+        return false;
+    }
+
+    // Get input and output tensors
+    input = interpreter->input(0);
+    output = interpreter->output(0);
+
+    // Validate expected shapes
+    if (input->dims->size != 4 ||
+        input->dims->data[1] != MODEL_INPUT_HEIGHT ||
+        input->dims->data[2] != MODEL_INPUT_WIDTH ||
+        input->dims->data[3] != MODEL_INPUT_CHANNELS) {
+        Serial.println("WARNING: Input tensor shape does not match expected [1,32,32,1]");
+    }
+    if (output->dims->size != 2 || output->dims->data[1] != NUM_CLASSES) {
+        Serial.println("WARNING: Output tensor shape does not match expected [1,NUM_CLASSES]");
+    }
+
     isInitialized = true;
-    
-    Serial.println("InferenceEngine initialized successfully (Mock Mode)");
+
+    Serial.println("InferenceEngine initialized successfully (TFLite Micro)");
     Serial.printf("Input shape: [1, %d, %d, %d]\n", MODEL_INPUT_HEIGHT, MODEL_INPUT_WIDTH, MODEL_INPUT_CHANNELS);
     Serial.printf("Output shape: [1, %d]\n", NUM_CLASSES);
     Serial.printf("Model size: %d bytes\n", getModelSize());
-    Serial.println("NOTE: Using mock inference for testing. TFLite integration pending library compatibility fix.");
-    
     return true;
 }
 
@@ -84,12 +136,85 @@ bool InferenceEngine::runInference(const float* spectrogram, float* probabilitie
     if (!isInitialized || !spectrogram || !probabilities) {
         return false;
     }
-    
-    // Generate mock probabilities for testing
-    generateMockProbabilities(probabilities);
-    
-    mock_inference_count++;
-    
+
+    // Copy spectrogram into model input
+    if (input->type == kTfLiteFloat32) {
+        float* in = input->data.f;
+        const size_t count = (size_t)(MODEL_INPUT_HEIGHT * MODEL_INPUT_WIDTH * MODEL_INPUT_CHANNELS);
+        memcpy(in, spectrogram, count * sizeof(float));
+    } else if (input->type == kTfLiteInt8) {
+        int8_t* in = input->data.int8;
+        const size_t count = (size_t)(MODEL_INPUT_HEIGHT * MODEL_INPUT_WIDTH * MODEL_INPUT_CHANNELS);
+        const float scale = input->params.scale;
+        const int zero_point = input->params.zero_point;
+        for (size_t i = 0; i < count; i++) {
+            int q = (int)lroundf(spectrogram[i] / scale) + zero_point;
+            if (q < -128) q = -128;
+            if (q > 127) q = 127;
+            in[i] = (int8_t)q;
+        }
+    } else {
+        Serial.println("ERROR: Unsupported input tensor type");
+        return false;
+    }
+
+    // Invoke
+    if (interpreter->Invoke() != kTfLiteOk) {
+        Serial.println("ERROR: Inference invocation failed");
+        return false;
+    }
+
+    // Read output and apply softmax to convert logits to probabilities
+    if (output->type == kTfLiteFloat32) {
+        const float* out = output->data.f;
+        // Apply softmax to convert logits to probabilities
+        float max_logit = out[0];
+        for (int i = 1; i < NUM_CLASSES; i++) {
+            if (out[i] > max_logit) max_logit = out[i];
+        }
+        
+        float sum_exp = 0.0f;
+        for (int i = 0; i < NUM_CLASSES; i++) {
+            probabilities[i] = expf(out[i] - max_logit); // Subtract max for numerical stability
+            sum_exp += probabilities[i];
+        }
+        
+        // Normalize to get probabilities
+        for (int i = 0; i < NUM_CLASSES; i++) {
+            probabilities[i] /= sum_exp;
+        }
+    } else if (output->type == kTfLiteInt8) {
+        const int8_t* out = output->data.int8;
+        const float scale = output->params.scale;
+        const int zero_point = output->params.zero_point;
+        
+        // Convert quantized logits to float
+        float logits[NUM_CLASSES];
+        for (int i = 0; i < NUM_CLASSES; i++) {
+            logits[i] = (out[i] - zero_point) * scale;
+        }
+        
+        // Apply softmax
+        float max_logit = logits[0];
+        for (int i = 1; i < NUM_CLASSES; i++) {
+            if (logits[i] > max_logit) max_logit = logits[i];
+        }
+        
+        float sum_exp = 0.0f;
+        for (int i = 0; i < NUM_CLASSES; i++) {
+            probabilities[i] = expf(logits[i] - max_logit);
+            sum_exp += probabilities[i];
+        }
+        
+        // Normalize to get probabilities
+        for (int i = 0; i < NUM_CLASSES; i++) {
+            probabilities[i] /= sum_exp;
+        }
+    } else {
+        Serial.println("ERROR: Unsupported output tensor type");
+        return false;
+    }
+
     return true;
 }
 
@@ -112,30 +237,6 @@ int InferenceEngine::getBestClass(const float* probabilities, float& confidence)
     return best_class;
 }
 
-void InferenceEngine::generateMockProbabilities(float* probabilities) {
-    // Generate realistic-looking probabilities that cycle through different wake words
-    // This simulates the behavior of the actual model for testing
-    
-    // Cycle through different classes every few inferences
-    int cycle = (mock_inference_count / 3) % NUM_CLASSES;
-    
-    // Set base probabilities
-    for (int i = 0; i < NUM_CLASSES; i++) {
-        probabilities[i] = 0.1f + (random(100) / 1000.0f); // 0.1-0.2 baseline
-    }
-    
-    // Make one class more prominent
-    probabilities[cycle] = 0.6f + (random(300) / 1000.0f); // 0.6-0.9 for dominant class
-    
-    // Normalize probabilities
-    float sum = 0.0f;
-    for (int i = 0; i < NUM_CLASSES; i++) {
-        sum += probabilities[i];
-    }
-    
-    for (int i = 0; i < NUM_CLASSES; i++) {
-        probabilities[i] /= sum;
-    }
-}
+// mock generator removed
 
 #endif // INFERENCE_ENGINE_H

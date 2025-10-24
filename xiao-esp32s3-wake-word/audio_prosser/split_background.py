@@ -10,6 +10,33 @@ import numpy as np
 from pathlib import Path
 import shutil
 
+def get_next_segment_number(output_dir):
+    """
+    Find the highest existing background file number and return next available number.
+    Returns 1 if no files exist.
+    """
+    if not output_dir.exists():
+        return 1
+    
+    # Find all background_*.wav files
+    existing_files = list(output_dir.glob("background_*.wav"))
+    
+    if not existing_files:
+        return 1
+    
+    # Extract numbers from filenames
+    numbers = []
+    for file in existing_files:
+        try:
+            # Extract number from "background_XXX.wav"
+            num_str = file.stem.split('_')[1]
+            numbers.append(int(num_str))
+        except (IndexError, ValueError):
+            continue
+    
+    # Return next number after the highest
+    return max(numbers) + 1 if numbers else 1
+
 def split_background_recordings():
     """
     Split background audio recordings into 1-second segments.
@@ -32,6 +59,10 @@ def split_background_recordings():
     # Create output directory if it doesn't exist
     output_dir.mkdir(parents=True, exist_ok=True)
     
+    # Find next available segment number
+    segment_counter = get_next_segment_number(output_dir)
+    print(f"Starting segment numbering from: background_{segment_counter:03d}.wav")
+    
     # Find all WAV files in input directory
     wav_files = list(input_dir.glob("*.wav"))
     
@@ -45,7 +76,6 @@ def split_background_recordings():
     wav_files.sort(key=lambda x: x.name)
     
     total_segments_created = 0
-    segment_counter = 1
     
     for wav_file in wav_files:
         print(f"\nProcessing: {wav_file.name}")

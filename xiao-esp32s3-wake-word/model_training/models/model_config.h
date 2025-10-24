@@ -1,7 +1,7 @@
 /*
  * Model Configuration Header
  * Auto-generated from config.json
- * Generated: 2025-10-19 23:14:15
+ * Generated: 2025-10-23 23:55:37
  * 
  * This file contains all configuration parameters for ESP32-S3 deployment.
  * These values are guaranteed to match the training configuration.
@@ -15,7 +15,7 @@
 // ============================================================================
 
 #define SAMPLE_RATE 16000
-#define DURATION_SECONDS 1.0
+#define DURATION_SECONDS 1
 #define NUM_SAMPLES 16000
 #define NUM_CHANNELS 1
 

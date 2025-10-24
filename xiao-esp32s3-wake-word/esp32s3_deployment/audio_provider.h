@@ -7,7 +7,7 @@
 #ifndef AUDIO_PROVIDER_H
 #define AUDIO_PROVIDER_H
 
-#include "ESP_I2S.h"
+#include <driver/i2s.h>
 #include <Arduino.h>
 #include <math.h>
 #include <stdint.h>
@@ -23,8 +23,8 @@ private:
     size_t bufferReadIndex;
     size_t bufferSize;
     
-    // ESP_I2S instance
-    I2SClass i2s;
+    // Using legacy I2S driver in PDM RX mode (IDF 4.x API)
+    bool i2sInitialized;
     
     // Window extraction state
     unsigned long lastWindowTime;
@@ -106,7 +106,8 @@ AudioProvider::AudioProvider()
     , compression_makeup_gain(COMPRESSION_MAKEUP_GAIN)
     , compression_attack_coeff(1.0f - exp(-1.0f / (COMPRESSION_ATTACK_MS * SAMPLE_RATE / 1000.0f)))
     , compression_release_coeff(1.0f - exp(-1.0f / (COMPRESSION_RELEASE_MS * SAMPLE_RATE / 1000.0f)))
-    , compression_envelope(0.0f) {
+    , compression_envelope(0.0f)
+    , i2sInitialized(false) {
 }
 
 AudioProvider::~AudioProvider() {
@@ -122,16 +123,46 @@ bool AudioProvider::init() {
         return false;
     }
     
-    // Set PDM pins using configuration (same as audio_recorder)
-    i2s.setPinsPdmRx(PDM_CLK_PIN, PDM_DATA_PIN);
-    
-    // Initialize PDM RX mode with 16-bit mono (same as audio_recorder)
-    if (!i2s.begin(I2S_MODE_PDM_RX, SAMPLE_RATE, I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_MONO)) {
-        Serial.println("ERROR: Failed to initialize ESP_I2S PDM microphone");
-        Serial.println("Make sure you selected XIAO_ESP32S3 board.");
+    // Configure legacy I2S in PDM RX mode (IDF 4.x API compatible with Arduino core 2.0.x)
+    i2s_config_t i2s_config;
+    memset(&i2s_config, 0, sizeof(i2s_config));
+    i2s_config.mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_PDM);
+    i2s_config.sample_rate = SAMPLE_RATE;
+    i2s_config.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT;
+    i2s_config.channel_format = I2S_CHANNEL_FMT_ONLY_LEFT;
+    i2s_config.communication_format = I2S_COMM_FORMAT_STAND_I2S;
+    i2s_config.intr_alloc_flags = 0;
+    i2s_config.dma_buf_count = 8;
+    i2s_config.dma_buf_len = 256;
+    i2s_config.use_apll = false;
+    i2s_config.tx_desc_auto_clear = false;
+    i2s_config.fixed_mclk = 0;
+
+    if (i2s_driver_install(I2S_NUM_0, &i2s_config, 0, NULL) != ESP_OK) {
+        Serial.println("ERROR: i2s_driver_install failed");
         freeBuffer();
         return false;
     }
+
+    i2s_pin_config_t pin_config;
+    pin_config.bck_io_num = I2S_PIN_NO_CHANGE; // Not used in PDM RX
+    pin_config.ws_io_num = PDM_CLK_PIN;        // PDM clock
+    pin_config.data_out_num = I2S_PIN_NO_CHANGE;
+    pin_config.data_in_num = PDM_DATA_PIN;     // PDM data
+    pin_config.mck_io_num = I2S_PIN_NO_CHANGE;
+
+    if (i2s_set_pin(I2S_NUM_0, &pin_config) != ESP_OK) {
+        Serial.println("ERROR: i2s_set_pin failed");
+        i2s_driver_uninstall(I2S_NUM_0);
+        freeBuffer();
+        return false;
+    }
+
+    // Set PDM RX clock and sample rate
+    i2s_set_clk(I2S_NUM_0, SAMPLE_RATE, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
+    i2s_set_pdm_rx_down_sample(I2S_NUM_0, I2S_PDM_DSR_8S);
+
+    i2sInitialized = true;
     
     isInitialized = true;
     lastWindowTime = millis();
@@ -146,44 +177,31 @@ bool AudioProvider::init() {
 void AudioProvider::update() {
     if (!isInitialized) return;
     
-    // Read available I2S data using ESP_I2S library
-    int16_t tempBuffer[1024]; // Increased buffer size for better throughput
-    int samplesRead = 0;
-    
-    // Read data from I2S - ESP_I2S library read() returns single sample
-    // We need to read multiple samples in a loop
-    for (int i = 0; i < 1024; i++) {
-        if (i2s.available()) {
-            int16_t sample = i2s.read();
-            tempBuffer[i] = sample;
-            samplesRead++;
-            
-            // Write sample to circular buffer
+    // Read available I2S data using legacy I2S API
+    static int16_t tempBuffer[1024];
+    size_t bytes_read = 0;
+    if (i2s_read(I2S_NUM_0, tempBuffer, sizeof(tempBuffer), &bytes_read, 0) == ESP_OK && bytes_read > 0) {
+        int samplesRead = bytes_read / sizeof(int16_t);
+        for (int i = 0; i < samplesRead; i++) {
+            int16_t sample = tempBuffer[i];
             audioBuffer[bufferWriteIndex] = sample;
             bufferWriteIndex = (bufferWriteIndex + 1) % bufferSize;
-        } else {
-            break; // No more data available
         }
-    }
-    
-    // Debug: Print samples read occasionally
-    static unsigned long lastDebugTime = 0;
-    static int totalSamplesRead = 0;
-    totalSamplesRead += samplesRead;
-    
-    if (millis() - lastDebugTime > 1000) { // Every second
-        Serial.printf("DEBUG: Samples read this update: %d, Total samples/sec: %d\n", samplesRead, totalSamplesRead);
-        totalSamplesRead = 0;
-        lastDebugTime = millis();
-    }
-    
-    // Update audio level if we got some samples
-    if (samplesRead > 0) {
+        // Update audio level
         currentRMS = calculateRMS(tempBuffer, samplesRead);
-        if (currentRMS > maxLevel) {
-            maxLevel = currentRMS;
+        if (currentRMS > maxLevel) maxLevel = currentRMS;
+
+        // Debug throughput (once per second)
+        static unsigned long lastDebugTime = 0;
+        static int totalSamplesRead = 0;
+        totalSamplesRead += samplesRead;
+        if (millis() - lastDebugTime > 1000) {
+            Serial.printf("DEBUG: Samples read this update: %d, Total samples/sec: %d\n", samplesRead, totalSamplesRead);
+            totalSamplesRead = 0;
+            lastDebugTime = millis();
         }
     }
+    
 }
 
 bool AudioProvider::hasNewWindow() {
@@ -275,6 +293,10 @@ void AudioProvider::freeBuffer() {
     if (audioBuffer) {
         free(audioBuffer);
         audioBuffer = nullptr;
+    }
+    if (i2sInitialized) {
+        i2s_driver_uninstall(I2S_NUM_0);
+        i2sInitialized = false;
     }
 }
 

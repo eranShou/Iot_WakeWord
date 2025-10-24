@@ -36,7 +36,7 @@
 #define DETECTION_CONFIDENCE_THRESHOLD CONFIDENCE_THRESHOLD
 
 // Cooldown period to prevent duplicate detections (milliseconds)
-#define DETECTION_COOLDOWN_MS 2000
+#define DETECTION_COOLDOWN_MS 300
 
 // ============================================================================
 // MEMORY ALLOCATION
