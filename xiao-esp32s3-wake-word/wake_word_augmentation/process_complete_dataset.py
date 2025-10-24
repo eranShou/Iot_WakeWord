@@ -289,7 +289,7 @@ class AudioAugmentor:
             }
         else:  # Low expansion (bait: ~3-4x)
             return {
-                'time_stretches': [0.9, 1.05],  # Minimal stretches
+                'time_stretches': [0.9, 0.95, 1.05, 1.1],  # Minimal stretches
                 'snr_levels': [25],  # Only one SNR level
                 'combinations_per_stretch': 1,  # Minimal combinations
                 'max_noise_types': 1  # Use only one noise type

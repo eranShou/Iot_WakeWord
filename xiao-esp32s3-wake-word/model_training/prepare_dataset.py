@@ -13,6 +13,9 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
 from custom_stft import compute_stft_custom
+from tqdm import tqdm
+from multiprocessing import Pool, cpu_count
+from functools import partial
 
 def load_config():
     """Load configuration from config.json"""
@@ -72,6 +75,19 @@ def create_spectrogram(audio, frame_length, frame_step, fft_length, target_heigh
     )
     
     return spectrogram
+
+def process_single_audio(audio, spectrogram_config):
+    """
+    Wrapper function for parallel processing of single audio sample
+    """
+    return create_spectrogram(
+        audio,
+        spectrogram_config['frame_length'],
+        spectrogram_config['frame_step'],
+        spectrogram_config['fft_length'],
+        spectrogram_config['target_height'],
+        spectrogram_config['target_width']
+    )
 
 def prepare_datasets():
     """
@@ -158,22 +174,29 @@ def prepare_datasets():
     # Convert to spectrograms
     print("\nConverting to spectrograms...")
     
-    def create_spectrograms(audio_data):
-        spectrograms = []
-        for audio in audio_data:
-            spec = create_spectrogram(
-                audio,
-                spectrogram_config['frame_length'],
-                spectrogram_config['frame_step'],
-                spectrogram_config['fft_length'],
-                spectrogram_config['target_height'],
-                spectrogram_config['target_width']
-            )
-            spectrograms.append(spec)
+    def create_spectrograms(audio_data, desc="Converting"):
+        """
+        Convert audio samples to spectrograms with parallel processing and progress tracking
+        """
+        # Create partial function with spectrogram config
+        process_func = partial(process_single_audio, spectrogram_config=spectrogram_config)
+        
+        # Use multiprocessing for parallel execution
+        num_processes = max(1, cpu_count() - 1)  # Leave one core free
+        print(f"Using {num_processes} parallel processes...")
+        
+        with Pool(processes=num_processes) as pool:
+            spectrograms = list(tqdm(
+                pool.imap(process_func, audio_data),
+                total=len(audio_data),
+                desc=desc,
+                unit="sample"
+            ))
+        
         return np.array(spectrograms)
     
-    train_spectrograms = create_spectrograms(train_audio)
-    val_spectrograms = create_spectrograms(val_audio)
+    train_spectrograms = create_spectrograms(train_audio, desc="Training spectrograms")
+    val_spectrograms = create_spectrograms(val_audio, desc="Validation spectrograms")
     
     # Create TensorFlow datasets
     train_dataset = tf.data.Dataset.from_tensor_slices((train_spectrograms, train_labels))
