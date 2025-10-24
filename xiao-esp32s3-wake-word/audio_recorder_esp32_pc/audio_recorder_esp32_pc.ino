@@ -2,7 +2,7 @@
  * ESP32 Audio Recorder - Stream to PC
  * For XIAO ESP32S3 with BUILT-IN MICROPHONE
  * 
- * Uses NEW ESP_I2S library with proper PDM support
+ * Uses legacy I2S driver (IDF 4.x API) compatible with Board Manager 2.0.16
  * Based on working code that records to SD card
  * 
  * Hardware: Seeed Studio XIAO ESP32S3
@@ -11,7 +11,10 @@
  * NO WIRING NEEDED - Uses built-in microphone!
  */
 
-#include "ESP_I2S.h"
+#include <driver/i2s.h>
+#include <Arduino.h>
+#include <math.h>
+#include <stdint.h>
 #include "mic_config.h"
 
 // Global variables
@@ -28,7 +31,79 @@ float compression_attack_coeff = 1.0f - exp(-1.0f / (COMPRESSION_ATTACK_MS * SAM
 float compression_release_coeff = 1.0f - exp(-1.0f / (COMPRESSION_RELEASE_MS * SAMPLE_RATE / 1000.0f));
 float compression_envelope = 0.0f;
 
-I2SClass i2s;
+// I2S configuration
+bool i2sInitialized = false;
+
+// Function to initialize I2S with PDM microphone
+bool initI2S() {
+  // Configure legacy I2S in PDM RX mode (IDF 4.x API compatible with Arduino core 2.0.x)
+  i2s_config_t i2s_config;
+  memset(&i2s_config, 0, sizeof(i2s_config));
+  i2s_config.mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_PDM);
+  i2s_config.sample_rate = SAMPLE_RATE;
+  i2s_config.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT;
+  i2s_config.channel_format = I2S_CHANNEL_FMT_ONLY_LEFT;
+  i2s_config.communication_format = I2S_COMM_FORMAT_STAND_I2S;
+  i2s_config.intr_alloc_flags = 0;
+  i2s_config.dma_buf_count = 8;
+  i2s_config.dma_buf_len = 256;
+  i2s_config.use_apll = false;
+  i2s_config.tx_desc_auto_clear = false;
+  i2s_config.fixed_mclk = 0;
+
+  if (i2s_driver_install(I2S_NUM_0, &i2s_config, 0, NULL) != ESP_OK) {
+    Serial.println("ERROR: i2s_driver_install failed");
+    return false;
+  }
+
+  i2s_pin_config_t pin_config;
+  pin_config.bck_io_num = I2S_PIN_NO_CHANGE; // Not used in PDM RX
+  pin_config.ws_io_num = PDM_CLK_PIN;        // PDM clock
+  pin_config.data_out_num = I2S_PIN_NO_CHANGE;
+  pin_config.data_in_num = PDM_DATA_PIN;     // PDM data
+  pin_config.mck_io_num = I2S_PIN_NO_CHANGE;
+
+  if (i2s_set_pin(I2S_NUM_0, &pin_config) != ESP_OK) {
+    Serial.println("ERROR: i2s_set_pin failed");
+    i2s_driver_uninstall(I2S_NUM_0);
+    return false;
+  }
+
+  // Set PDM RX clock and sample rate
+  i2s_set_clk(I2S_NUM_0, SAMPLE_RATE, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_MONO);
+  i2s_set_pdm_rx_down_sample(I2S_NUM_0, I2S_PDM_DSR_8S);
+
+  i2sInitialized = true;
+  return true;
+}
+
+// Function to record audio using legacy I2S driver
+bool recordAudioI2S(uint8_t* audio_buffer, uint32_t buffer_size) {
+  if (!i2sInitialized) {
+    Serial.println("ERROR: I2S not initialized");
+    return false;
+  }
+
+  size_t bytes_read = 0;
+  uint32_t total_bytes_read = 0;
+  
+  // Read audio data in chunks
+  while (total_bytes_read < buffer_size) {
+    size_t bytes_to_read = min((size_t)(buffer_size - total_bytes_read), (size_t)1024);
+    
+    if (i2s_read(I2S_NUM_0, audio_buffer + total_bytes_read, bytes_to_read, &bytes_read, portMAX_DELAY) != ESP_OK) {
+      Serial.println("ERROR: i2s_read failed");
+      return false;
+    }
+    
+    total_bytes_read += bytes_read;
+    
+    // Small delay to prevent overwhelming the system
+    delay(1);
+  }
+  
+  return true;
+}
 
 // Function to apply compression and gain to 16-bit audio samples
 void applyAudioCompressionAndGain(uint8_t* audio_data, uint32_t audio_size) {
@@ -94,14 +169,11 @@ void setup() {
   Serial.println("========================================");
   Serial.println(MSG_READY);
   
-  // Initialize built-in PDM microphone using NEW I2S library
+  // Initialize built-in PDM microphone using legacy I2S driver
   Serial.println("Initializing built-in PDM microphone...");
   
-  // Set PDM pins using configuration
-  i2s.setPinsPdmRx(PDM_CLK_PIN, PDM_DATA_PIN);
-  
-  // Initialize PDM RX mode with 16-bit mono
-  if (!i2s.begin(I2S_MODE_PDM_RX, SAMPLE_RATE, I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_MONO)) {
+  // Initialize I2S with PDM configuration
+  if (!initI2S()) {
     Serial.println(MSG_ERROR_MICROPHONE);
     Serial.println(MSG_ERROR_BOARD);
     while (1) {
@@ -258,20 +330,25 @@ void recordAndSendAudio() {
   Serial.flush();
   delay(SETUP_DELAY_MS);
   
-  // Use the new I2S library's recordWAV function
-  // This handles all the PDM->PCM conversion properly!
-  size_t wav_size;
-  uint8_t *wav_buffer = i2s.recordWAV(record_time, &wav_size);
+  // Allocate buffer for raw audio data
+  uint32_t audio_size = CALCULATE_AUDIO_SIZE(record_time);
+  uint8_t *audio_buffer = (uint8_t*)malloc(audio_size);
   
-  if (wav_buffer == NULL) {
+  if (audio_buffer == NULL) {
+    Serial.println("ERROR: Failed to allocate audio buffer");
     Serial.println(MSG_ERROR_RECORD);
     return;
   }
   
-  // The recordWAV function returns a complete WAV file with header
-  // We need to extract just the audio data (skip 44-byte WAV header)
-  uint8_t *audio_data = wav_buffer + 44;
-  uint32_t audio_size = wav_size - 44;
+  // Record audio using legacy I2S driver
+  Serial.println("Recording audio...");
+  if (!recordAudioI2S(audio_buffer, audio_size)) {
+    Serial.println(MSG_ERROR_RECORD);
+    free(audio_buffer);
+    return;
+  }
+  
+  uint8_t *audio_data = audio_buffer;
   
   // Apply compression and gain to boost audio volume if enabled
   if ((gain_enabled && current_gain > 1.0f) || compression_enabled) {
@@ -304,7 +381,7 @@ void recordAndSendAudio() {
   Serial.flush();
   
   // Clean up
-  free(wav_buffer);
+  free(audio_buffer);
   
   Serial.println();
   Serial.println(MSG_RECORDING_COMPLETE);

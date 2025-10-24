@@ -22,3 +22,4 @@ database/
 # Recordings
 xiao-esp32s3-wake-word/audio_recorder_esp32_pc/recordings/
 xiao-esp32s3-wake-word/esp32s3_deployment/received_wavs/
+xiao-esp32s3-wake-word/audio_prosser/data/
