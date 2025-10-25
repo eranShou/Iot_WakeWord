@@ -50,8 +50,10 @@
 
 
 #include <I2S.h>
+
 #define SAMPLE_RATE 16000U
 #define SAMPLE_BITS 16
+#define KEY_WORD "shalom"
 
 // [NEW CODE] Global counter for indexed logging
 static int32_t log_index = 0;
@@ -195,14 +197,13 @@ void loop() {
 
     // Print the verbose log (which now includes the index)
     printPrediction(result);
-    
-    // 2. Print a single line in CSV format for easy data logging
-    ei_printf("CSV_LOG:%ld", log_index - 1); // Use log_index - 1 since printPrediction already incremented it
-    ei_printf(",%s", result.classification[pred_index].label); 
-    ei_printf_float(pred_value);
-    ei_printf(",%d", result.timing.dsp); 
-    ei_printf(",%d", result.timing.classification); 
 
+    if (strcmp(result.classification[pred_index].label, KEY_WORD) == 0) {
+      digitalWrite(LED_BUILTIN, LOW);
+    } else {
+      digitalWrite(LED_BUILTIN, HIGH);
+    }
+    
     // Handle Anomaly Score
 #if EI_CLASSIFIER_HAS_ANOMALY == 1
     ei_printf(",");
