@@ -25,7 +25,11 @@
 4. notes and ways to improve preformance:
     1. training without unknown key gives false positive - meaning every word that not sound like noise is classefied to one of the labels
 
-### 3. TF Lite Micro
+### 3. TF Lite Micro - MFCC
+1. code in `ESP32/tflm/tflm.ino`  for controller and in `TFLM/train_mfcc.py` to train model.
+2. to train model change labels number and names in the `train_mfcc.py` script, enter the data to the data folder by label (a folder to each label), run the script and then run `xxd -i TFLM/wakeword_model_esp32mfcc.tflite > ESP32/tflm/model_data.h` (on linux)
+3. flush the code in the tflm directory to your controller
+4. notes - the mfcc is basic and less accurate than other options
 
 
 ## Folder description :
