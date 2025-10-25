@@ -182,10 +182,24 @@ void AudioProvider::update() {
     size_t bytes_read = 0;
     if (i2s_read(I2S_NUM_0, tempBuffer, sizeof(tempBuffer), &bytes_read, 0) == ESP_OK && bytes_read > 0) {
         int samplesRead = bytes_read / sizeof(int16_t);
-        for (int i = 0; i < samplesRead; i++) {
+        
+        // Check available space in buffer to prevent overwriting unread data
+        size_t availableSpace = (bufferReadIndex > bufferWriteIndex)
+            ? (bufferReadIndex - bufferWriteIndex - 1)
+            : (bufferSize - bufferWriteIndex + bufferReadIndex - 1);
+        
+        // Only write samples if there's space available
+        int samplesToWrite = min((size_t)samplesRead, availableSpace);
+        
+        for (int i = 0; i < samplesToWrite; i++) {
             int16_t sample = tempBuffer[i];
             audioBuffer[bufferWriteIndex] = sample;
             bufferWriteIndex = (bufferWriteIndex + 1) % bufferSize;
+        }
+        
+        // If we dropped samples, update the counter
+        if (samplesToWrite < samplesRead) {
+            Serial.printf("WARNING: Buffer overflow! Dropped %d samples\n", samplesRead - samplesToWrite);
         }
         // Update audio level
         currentRMS = calculateRMS(tempBuffer, samplesRead);
@@ -236,10 +250,12 @@ bool AudioProvider::getNextWindow(int16_t* windowBuffer, size_t samples) {
         return false;
     }
     
-    // Extract window from circular buffer
+    // Extract window from circular buffer WITHOUT advancing read index
+    // Store current read index, extract data, then advance by stride
+    size_t startReadIndex = bufferReadIndex;
     for (size_t i = 0; i < samples; i++) {
-        windowBuffer[i] = audioBuffer[bufferReadIndex];
-        bufferReadIndex = (bufferReadIndex + 1) % bufferSize;
+        size_t index = (startReadIndex + i) % bufferSize;
+        windowBuffer[i] = audioBuffer[index];
     }
     
     // Apply audio processing (gain and compression) - same as audio_recorder_esp32_pc.ino
@@ -247,12 +263,12 @@ bool AudioProvider::getNextWindow(int16_t* windowBuffer, size_t samples) {
         applyAudioCompressionAndGain(windowBuffer, samples * sizeof(int16_t));
     }
     
-    // Advance read index by stride amount for sliding window (not full window size)
-    // This creates the intended 50% overlap between windows
+    // Advance read index by stride amount for sliding window (50% overlap)
+    // Next window will start at (start + WINDOW_STRIDE_SAMPLES)
     size_t oldReadIndex = bufferReadIndex;
     bufferReadIndex = (bufferReadIndex + WINDOW_STRIDE_SAMPLES) % bufferSize;
     
-    Serial.printf("DEBUG: Sliding window - Old read index: %d, New read index: %d, Stride: %d\n", 
+    Serial.printf("DEBUG: Sliding window - Old read index: %d, New read index: %d, Stride: %d samples\n", 
                   oldReadIndex, bufferReadIndex, WINDOW_STRIDE_SAMPLES);
     
     lastWindowTime = millis();

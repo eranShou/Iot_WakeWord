@@ -58,7 +58,8 @@
   },
   "esp32": {
     "tensor_arena_size": 8000,
-    "confidence_threshold": 0.7,
-    "deployment_dir": "../esp32s3_deployment"
+    "confidence_threshold": 0.5,
+    "deployment_dir": "../esp32s3_deployment",
+    "standalone_dir": "../esp32s3_standalone"
   }
 }

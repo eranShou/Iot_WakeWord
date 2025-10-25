@@ -3374,3 +3374,378 @@ Class Statistics:
 2025-10-25 11:54:18,480 - INFO -   lehitraoot: 1512 files (24.0x expansion)
 2025-10-25 11:54:18,480 - INFO -   shalom: 1440 files (24.0x expansion)
 2025-10-25 11:54:18,480 - INFO -   unknown: 1400 files (10.0x expansion)
+2025-10-25 18:42:59,538 - INFO - ============================================================
+2025-10-25 18:42:59,538 - INFO - Complete Dataset Processing for Wake Word Detection
+2025-10-25 18:42:59,538 - INFO - ============================================================
+2025-10-25 18:42:59,540 - INFO - Loaded 584 noise files
+2025-10-25 18:42:59,541 - INFO - Starting audio augmentation...
+2025-10-25 18:42:59,541 - INFO - Data directory: ..\database
+2025-10-25 18:42:59,541 - INFO - Augmented files will be saved to: ..\augmented_dataset
+2025-10-25 18:42:59,541 - INFO - Noise directory: ..\database\background
+2025-10-25 18:42:59,542 - INFO - Available noise files: 584
+2025-10-25 18:42:59,542 - INFO - Target samples per class: 2250
+2025-10-25 18:42:59,542 - INFO - 
+Copying background directory as-is (no augmentation)
+2025-10-25 18:42:59,838 - INFO - Copied 584 files from background
+2025-10-25 18:42:59,838 - INFO - Found 3 word directories: ['lehitraoot', 'shalom', 'unknown']
+2025-10-25 18:42:59,838 - INFO - 
+Processing word: lehitraoot
+2025-10-25 18:42:59,839 - INFO - Found 75 WAV files
+2025-10-25 18:42:59,839 - INFO - Original samples: 75, Target: 2250
+2025-10-25 18:42:59,839 - INFO - Need 2175 augmentations (29.0 per file)
+2025-10-25 18:42:59,887 - INFO - Copied 75 original files
+2025-10-25 18:42:59,888 - INFO - Processing: 007_lehitraoot_conf[0.928, 0.036, 0.036, 0.000].wav
+2025-10-25 18:43:03,427 - INFO - Created 23 augmentations for 007_lehitraoot_conf[0.928, 0.036, 0.036, 0.000].wav
+2025-10-25 18:43:03,427 - INFO - Processing: 010_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:03,622 - INFO - Created 23 augmentations for 010_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:03,623 - INFO - Processing: 011_lehitraoot_conf[0.551, 0.386, 0.060, 0.003].wav
+2025-10-25 18:43:03,814 - INFO - Created 23 augmentations for 011_lehitraoot_conf[0.551, 0.386, 0.060, 0.003].wav
+2025-10-25 18:43:03,814 - INFO - Processing: 013_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:04,022 - INFO - Created 23 augmentations for 013_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:04,022 - INFO - Processing: 014_lehitraoot_conf[0.980, 0.020, 0.000, 0.000].wav
+2025-10-25 18:43:04,235 - INFO - Created 23 augmentations for 014_lehitraoot_conf[0.980, 0.020, 0.000, 0.000].wav
+2025-10-25 18:43:04,235 - INFO - Processing: 015_lehitraoot_conf[0.984, 0.015, 0.000, 0.000].wav
+2025-10-25 18:43:04,430 - INFO - Created 23 augmentations for 015_lehitraoot_conf[0.984, 0.015, 0.000, 0.000].wav
+2025-10-25 18:43:04,431 - INFO - Processing: 018_lehitraoot_conf[0.868, 0.121, 0.011, 0.000].wav
+2025-10-25 18:43:04,627 - INFO - Created 23 augmentations for 018_lehitraoot_conf[0.868, 0.121, 0.011, 0.000].wav
+2025-10-25 18:43:04,627 - INFO - Processing: 019_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:04,801 - INFO - Created 23 augmentations for 019_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:04,801 - INFO - Processing: 021_lehitraoot_conf[0.704, 0.153, 0.142, 0.001].wav
+2025-10-25 18:43:04,984 - INFO - Created 23 augmentations for 021_lehitraoot_conf[0.704, 0.153, 0.142, 0.001].wav
+2025-10-25 18:43:04,984 - INFO - Processing: 023_lehitraoot_conf[0.997, 0.003, 0.000, 0.000].wav
+2025-10-25 18:43:05,164 - INFO - Created 23 augmentations for 023_lehitraoot_conf[0.997, 0.003, 0.000, 0.000].wav
+2025-10-25 18:43:05,165 - INFO - Processing: 023_shalom_conf[0.473, 0.518, 0.008, 0.000].wav
+2025-10-25 18:43:05,351 - INFO - Created 23 augmentations for 023_shalom_conf[0.473, 0.518, 0.008, 0.000].wav
+2025-10-25 18:43:05,351 - INFO - Processing: 024_lehitraoot_conf[0.644, 0.350, 0.006, 0.000].wav
+2025-10-25 18:43:05,530 - INFO - Created 23 augmentations for 024_lehitraoot_conf[0.644, 0.350, 0.006, 0.000].wav
+2025-10-25 18:43:05,530 - INFO - Processing: 024_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:05,712 - INFO - Created 23 augmentations for 024_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:05,712 - INFO - Processing: 026_lehitraoot_conf[0.994, 0.000, 0.006, 0.000].wav
+2025-10-25 18:43:05,919 - INFO - Created 23 augmentations for 026_lehitraoot_conf[0.994, 0.000, 0.006, 0.000].wav
+2025-10-25 18:43:05,919 - INFO - Processing: 026_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,102 - INFO - Created 23 augmentations for 026_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,102 - INFO - Processing: 029_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,286 - INFO - Created 23 augmentations for 029_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,286 - INFO - Processing: 030_lehitraoot_conf[0.540, 0.436, 0.023, 0.001].wav
+2025-10-25 18:43:06,531 - INFO - Created 23 augmentations for 030_lehitraoot_conf[0.540, 0.436, 0.023, 0.001].wav
+2025-10-25 18:43:06,532 - INFO - Processing: 051_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,741 - INFO - Created 23 augmentations for 051_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:06,742 - INFO - Processing: 052_lehitraoot_conf[0.646, 0.338, 0.015, 0.001].wav
+2025-10-25 18:43:06,927 - INFO - Created 23 augmentations for 052_lehitraoot_conf[0.646, 0.338, 0.015, 0.001].wav
+2025-10-25 18:43:06,927 - INFO - Processing: 054_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,113 - INFO - Created 23 augmentations for 054_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,113 - INFO - Processing: 055_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,307 - INFO - Created 23 augmentations for 055_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,307 - INFO - Processing: 056_shalom_conf[0.364, 0.620, 0.015, 0.001].wav
+2025-10-25 18:43:07,507 - INFO - Created 23 augmentations for 056_shalom_conf[0.364, 0.620, 0.015, 0.001].wav
+2025-10-25 18:43:07,508 - INFO - Processing: 058_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,699 - INFO - Created 23 augmentations for 058_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,699 - INFO - Processing: 059_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,890 - INFO - Created 23 augmentations for 059_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:07,890 - INFO - Processing: 061_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,125 - INFO - Created 23 augmentations for 061_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,125 - INFO - Processing: 062_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,313 - INFO - Created 23 augmentations for 062_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,314 - INFO - Processing: 064_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,499 - INFO - Created 23 augmentations for 064_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,499 - INFO - Processing: 114_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,685 - INFO - Created 23 augmentations for 114_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,686 - INFO - Processing: 115_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,876 - INFO - Created 23 augmentations for 115_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:08,876 - INFO - Processing: 117_background_conf[0.383, 0.001, 0.614, 0.002].wav
+2025-10-25 18:43:09,072 - INFO - Created 23 augmentations for 117_background_conf[0.383, 0.001, 0.614, 0.002].wav
+2025-10-25 18:43:09,072 - INFO - Processing: 118_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,257 - INFO - Created 23 augmentations for 118_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,257 - INFO - Processing: 119_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,552 - INFO - Created 23 augmentations for 119_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,553 - INFO - Processing: 120_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,799 - INFO - Created 23 augmentations for 120_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:09,800 - INFO - Processing: 122_background_conf[0.001, 0.000, 0.999, 0.000].wav
+2025-10-25 18:43:09,991 - INFO - Created 23 augmentations for 122_background_conf[0.001, 0.000, 0.999, 0.000].wav
+2025-10-25 18:43:09,991 - INFO - Processing: 123_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:10,185 - INFO - Created 23 augmentations for 123_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:10,185 - INFO - Processing: 124_shalom_conf[0.080, 0.917, 0.000, 0.003].wav
+2025-10-25 18:43:10,410 - INFO - Created 23 augmentations for 124_shalom_conf[0.080, 0.917, 0.000, 0.003].wav
+2025-10-25 18:43:10,411 - INFO - Processing: 125_background_conf[0.271, 0.000, 0.729, 0.000].wav
+2025-10-25 18:43:10,607 - INFO - Created 23 augmentations for 125_background_conf[0.271, 0.000, 0.729, 0.000].wav
+2025-10-25 18:43:10,607 - INFO - Processing: 126_background_conf[0.004, 0.007, 0.987, 0.002].wav
+2025-10-25 18:43:10,802 - INFO - Created 23 augmentations for 126_background_conf[0.004, 0.007, 0.987, 0.002].wav
+2025-10-25 18:43:10,802 - INFO - Processing: 127_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:11,008 - INFO - Created 23 augmentations for 127_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:11,009 - INFO - Processing: lehitraoot_001.wav
+2025-10-25 18:43:11,198 - INFO - Created 23 augmentations for lehitraoot_001.wav
+2025-10-25 18:43:11,199 - INFO - Processing: lehitraoot_002.wav
+2025-10-25 18:43:11,395 - INFO - Created 23 augmentations for lehitraoot_002.wav
+2025-10-25 18:43:11,395 - INFO - Processing: lehitraoot_003.wav
+2025-10-25 18:43:11,877 - INFO - Created 23 augmentations for lehitraoot_003.wav
+2025-10-25 18:43:11,878 - INFO - Processing: lehitraoot_004.wav
+2025-10-25 18:43:12,049 - INFO - Created 23 augmentations for lehitraoot_004.wav
+2025-10-25 18:43:12,049 - INFO - Processing: lehitraoot_006.wav
+2025-10-25 18:43:12,225 - INFO - Created 23 augmentations for lehitraoot_006.wav
+2025-10-25 18:43:12,225 - INFO - Processing: lehitraoot_008.wav
+2025-10-25 18:43:12,412 - INFO - Created 23 augmentations for lehitraoot_008.wav
+2025-10-25 18:43:12,412 - INFO - Processing: lehitraoot_009.wav
+2025-10-25 18:43:12,602 - INFO - Created 23 augmentations for lehitraoot_009.wav
+2025-10-25 18:43:12,602 - INFO - Processing: lehitraoot_010.wav
+2025-10-25 18:43:12,794 - INFO - Created 23 augmentations for lehitraoot_010.wav
+2025-10-25 18:43:12,794 - INFO - Processing: lehitraoot_011.wav
+2025-10-25 18:43:12,978 - INFO - Created 23 augmentations for lehitraoot_011.wav
+2025-10-25 18:43:12,978 - INFO - Processing: lehitraoot_012.wav
+2025-10-25 18:43:13,181 - INFO - Created 23 augmentations for lehitraoot_012.wav
+2025-10-25 18:43:13,181 - INFO - Processing: lehitraoot_014.wav
+2025-10-25 18:43:13,372 - INFO - Created 23 augmentations for lehitraoot_014.wav
+2025-10-25 18:43:13,373 - INFO - Processing: lehitraoot_015.wav
+2025-10-25 18:43:13,552 - INFO - Created 23 augmentations for lehitraoot_015.wav
+2025-10-25 18:43:13,552 - INFO - Processing: lehitraoot_017.wav
+2025-10-25 18:43:13,753 - INFO - Created 23 augmentations for lehitraoot_017.wav
+2025-10-25 18:43:13,754 - INFO - Processing: lehitraoot_022.wav
+2025-10-25 18:43:13,954 - INFO - Created 23 augmentations for lehitraoot_022.wav
+2025-10-25 18:43:13,954 - INFO - Processing: lehitraoot_025.wav
+2025-10-25 18:43:14,134 - INFO - Created 23 augmentations for lehitraoot_025.wav
+2025-10-25 18:43:14,135 - INFO - Processing: lehitraoot_027.wav
+2025-10-25 18:43:14,321 - INFO - Created 23 augmentations for lehitraoot_027.wav
+2025-10-25 18:43:14,321 - INFO - Processing: lehitraoot_029.wav
+2025-10-25 18:43:14,540 - INFO - Created 23 augmentations for lehitraoot_029.wav
+2025-10-25 18:43:14,540 - INFO - Processing: lehitraoot_030.wav
+2025-10-25 18:43:14,730 - INFO - Created 23 augmentations for lehitraoot_030.wav
+2025-10-25 18:43:14,731 - INFO - Processing: lehitraoot_033.wav
+2025-10-25 18:43:14,917 - INFO - Created 23 augmentations for lehitraoot_033.wav
+2025-10-25 18:43:14,917 - INFO - Processing: lehitraoot_034.wav
+2025-10-25 18:43:15,103 - INFO - Created 23 augmentations for lehitraoot_034.wav
+2025-10-25 18:43:15,104 - INFO - Processing: lehitraoot_037.wav
+2025-10-25 18:43:15,295 - INFO - Created 23 augmentations for lehitraoot_037.wav
+2025-10-25 18:43:15,296 - INFO - Processing: lehitraoot_038.wav
+2025-10-25 18:43:15,481 - INFO - Created 23 augmentations for lehitraoot_038.wav
+2025-10-25 18:43:15,482 - INFO - Processing: lehitraoot_039.wav
+2025-10-25 18:43:15,667 - INFO - Created 23 augmentations for lehitraoot_039.wav
+2025-10-25 18:43:15,668 - INFO - Processing: lehitraoot_040.wav
+2025-10-25 18:43:15,854 - INFO - Created 23 augmentations for lehitraoot_040.wav
+2025-10-25 18:43:15,854 - INFO - Processing: lehitraoot_041.wav
+2025-10-25 18:43:16,035 - INFO - Created 23 augmentations for lehitraoot_041.wav
+2025-10-25 18:43:16,035 - INFO - Processing: lehitraoot_044.wav
+2025-10-25 18:43:16,213 - INFO - Created 23 augmentations for lehitraoot_044.wav
+2025-10-25 18:43:16,213 - INFO - Processing: lehitraoot_046.wav
+2025-10-25 18:43:16,399 - INFO - Created 23 augmentations for lehitraoot_046.wav
+2025-10-25 18:43:16,399 - INFO - Processing: lehitraoot_047.wav
+2025-10-25 18:43:16,585 - INFO - Created 23 augmentations for lehitraoot_047.wav
+2025-10-25 18:43:16,585 - INFO - Processing: lehitraoot_048.wav
+2025-10-25 18:43:16,763 - INFO - Created 23 augmentations for lehitraoot_048.wav
+2025-10-25 18:43:16,763 - INFO - Processing: lehitraoot_049.wav
+2025-10-25 18:43:16,966 - INFO - Created 23 augmentations for lehitraoot_049.wav
+2025-10-25 18:43:16,967 - INFO - Processing: lehitraoot_051.wav
+2025-10-25 18:43:17,365 - INFO - Created 23 augmentations for lehitraoot_051.wav
+2025-10-25 18:43:17,365 - INFO - Processing: lehitraoot_053.wav
+2025-10-25 18:43:17,585 - INFO - Created 23 augmentations for lehitraoot_053.wav
+2025-10-25 18:43:17,586 - INFO - Processing: lehitraoot_054.wav
+2025-10-25 18:43:17,787 - INFO - Created 23 augmentations for lehitraoot_054.wav
+2025-10-25 18:43:17,788 - INFO - Processing: lehitraoot_055.wav
+2025-10-25 18:43:17,996 - INFO - Created 23 augmentations for lehitraoot_055.wav
+2025-10-25 18:43:17,996 - INFO - Processing: lehitraoot_056.wav
+2025-10-25 18:43:18,181 - INFO - Created 23 augmentations for lehitraoot_056.wav
+2025-10-25 18:43:18,181 - INFO - Processing: lehitraoot_057.wav
+2025-10-25 18:43:18,363 - INFO - Created 23 augmentations for lehitraoot_057.wav
+2025-10-25 18:43:18,364 - INFO - Class lehitraoot completed: 1800 total files (24.0x expansion)
+2025-10-25 18:43:18,364 - INFO - 
+Processing word: shalom
+2025-10-25 18:43:18,364 - INFO - Found 86 WAV files
+2025-10-25 18:43:18,365 - INFO - Original samples: 86, Target: 2250
+2025-10-25 18:43:18,365 - INFO - Need 2164 augmentations (25.2 per file)
+2025-10-25 18:43:18,423 - INFO - Copied 86 original files
+2025-10-25 18:43:18,423 - INFO - Processing: 017_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:18,624 - INFO - Created 23 augmentations for 017_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:18,625 - INFO - Processing: 019_lehitraoot_conf[0.974, 0.000, 0.026, 0.000].wav
+2025-10-25 18:43:18,810 - INFO - Created 23 augmentations for 019_lehitraoot_conf[0.974, 0.000, 0.026, 0.000].wav
+2025-10-25 18:43:18,810 - INFO - Processing: 020_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:18,996 - INFO - Created 23 augmentations for 020_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:18,997 - INFO - Processing: 021_shalom_conf[0.131, 0.854, 0.015, 0.000].wav
+2025-10-25 18:43:19,200 - INFO - Created 23 augmentations for 021_shalom_conf[0.131, 0.854, 0.015, 0.000].wav
+2025-10-25 18:43:19,200 - INFO - Processing: 022_shalom_conf[0.003, 0.990, 0.006, 0.001].wav
+2025-10-25 18:43:19,390 - INFO - Created 23 augmentations for 022_shalom_conf[0.003, 0.990, 0.006, 0.001].wav
+2025-10-25 18:43:19,391 - INFO - Processing: 023_shalom_conf[0.000, 0.997, 0.000, 0.003].wav
+2025-10-25 18:43:19,608 - INFO - Created 23 augmentations for 023_shalom_conf[0.000, 0.997, 0.000, 0.003].wav
+2025-10-25 18:43:19,609 - INFO - Processing: 024_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:19,814 - INFO - Created 23 augmentations for 024_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:19,814 - INFO - Processing: 025_background_conf[0.181, 0.010, 0.802, 0.007].wav
+2025-10-25 18:43:20,012 - INFO - Created 23 augmentations for 025_background_conf[0.181, 0.010, 0.802, 0.007].wav
+2025-10-25 18:43:20,013 - INFO - Processing: 025_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:20,209 - INFO - Created 23 augmentations for 025_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:20,209 - INFO - Processing: 026_background_conf[0.000, 0.001, 0.999, 0.000].wav
+2025-10-25 18:43:20,407 - INFO - Created 23 augmentations for 026_background_conf[0.000, 0.001, 0.999, 0.000].wav
+2025-10-25 18:43:20,407 - INFO - Processing: 026_shalom_conf[0.000, 0.997, 0.003, 0.001].wav
+2025-10-25 18:43:20,614 - INFO - Created 23 augmentations for 026_shalom_conf[0.000, 0.997, 0.003, 0.001].wav
+2025-10-25 18:43:20,614 - INFO - Processing: 027_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:20,831 - INFO - Created 23 augmentations for 027_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:20,831 - INFO - Processing: 028_shalom_conf[0.002, 0.990, 0.008, 0.000].wav
+2025-10-25 18:43:21,054 - INFO - Created 23 augmentations for 028_shalom_conf[0.002, 0.990, 0.008, 0.000].wav
+2025-10-25 18:43:21,055 - INFO - Processing: 029_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:21,254 - INFO - Created 23 augmentations for 029_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:21,255 - INFO - Processing: 030_background_conf[0.001, 0.001, 0.998, 0.000].wav
+2025-10-25 18:43:21,461 - INFO - Created 23 augmentations for 030_background_conf[0.001, 0.001, 0.998, 0.000].wav
+2025-10-25 18:43:21,461 - INFO - Processing: 031_shalom_conf[0.012, 0.988, 0.000, 0.000].wav
+2025-10-25 18:43:21,688 - INFO - Created 23 augmentations for 031_shalom_conf[0.012, 0.988, 0.000, 0.000].wav
+2025-10-25 18:43:21,689 - INFO - Processing: 034_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:21,912 - INFO - Created 23 augmentations for 034_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:21,912 - INFO - Processing: 035_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,111 - INFO - Created 23 augmentations for 035_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,112 - INFO - Processing: 036_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,305 - INFO - Created 23 augmentations for 036_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,305 - INFO - Processing: 038_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,496 - INFO - Created 23 augmentations for 038_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,496 - INFO - Processing: 039_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,936 - INFO - Created 23 augmentations for 039_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:22,936 - INFO - Processing: 041_shalom_conf[0.002, 0.998, 0.000, 0.000].wav
+2025-10-25 18:43:23,139 - INFO - Created 23 augmentations for 041_shalom_conf[0.002, 0.998, 0.000, 0.000].wav
+2025-10-25 18:43:23,140 - INFO - Processing: 042_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:23,332 - INFO - Created 23 augmentations for 042_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:23,332 - INFO - Processing: 044_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:23,491 - INFO - Created 23 augmentations for 044_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:23,492 - INFO - Processing: 047_lehitraoot_conf[0.992, 0.005, 0.003, 0.000].wav
+2025-10-25 18:43:23,679 - INFO - Created 23 augmentations for 047_lehitraoot_conf[0.992, 0.005, 0.003, 0.000].wav
+2025-10-25 18:43:23,680 - INFO - Processing: 047_shalom_conf[0.001, 0.997, 0.002, 0.000].wav
+2025-10-25 18:43:23,872 - INFO - Created 23 augmentations for 047_shalom_conf[0.001, 0.997, 0.002, 0.000].wav
+2025-10-25 18:43:23,872 - INFO - Processing: 048_background_conf[0.001, 0.000, 0.998, 0.000].wav
+2025-10-25 18:43:24,077 - INFO - Created 23 augmentations for 048_background_conf[0.001, 0.000, 0.998, 0.000].wav
+2025-10-25 18:43:24,077 - INFO - Processing: 048_shalom_conf[0.000, 0.977, 0.023, 0.000].wav
+2025-10-25 18:43:24,271 - INFO - Created 23 augmentations for 048_shalom_conf[0.000, 0.977, 0.023, 0.000].wav
+2025-10-25 18:43:24,272 - INFO - Processing: 049_lehitraoot_conf[0.986, 0.013, 0.002, 0.000].wav
+2025-10-25 18:43:24,575 - INFO - Created 23 augmentations for 049_lehitraoot_conf[0.986, 0.013, 0.002, 0.000].wav
+2025-10-25 18:43:24,575 - INFO - Processing: 049_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:24,815 - INFO - Created 23 augmentations for 049_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:24,816 - INFO - Processing: 050_background_conf[0.049, 0.022, 0.928, 0.001].wav
+2025-10-25 18:43:25,033 - INFO - Created 23 augmentations for 050_background_conf[0.049, 0.022, 0.928, 0.001].wav
+2025-10-25 18:43:25,033 - INFO - Processing: 051_background_conf[0.003, 0.000, 0.997, 0.000].wav
+2025-10-25 18:43:25,249 - INFO - Created 23 augmentations for 051_background_conf[0.003, 0.000, 0.997, 0.000].wav
+2025-10-25 18:43:25,249 - INFO - Processing: 052_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:25,466 - INFO - Created 23 augmentations for 052_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:25,466 - INFO - Processing: 053_background_conf[0.005, 0.000, 0.994, 0.000].wav
+2025-10-25 18:43:25,660 - INFO - Created 23 augmentations for 053_background_conf[0.005, 0.000, 0.994, 0.000].wav
+2025-10-25 18:43:25,661 - INFO - Processing: 053_lehitraoot_conf[0.961, 0.008, 0.031, 0.000].wav
+2025-10-25 18:43:25,848 - INFO - Created 23 augmentations for 053_lehitraoot_conf[0.961, 0.008, 0.031, 0.000].wav
+2025-10-25 18:43:25,848 - INFO - Processing: 054_lehitraoot_conf[0.731, 0.249, 0.020, 0.000].wav
+2025-10-25 18:43:26,049 - INFO - Created 23 augmentations for 054_lehitraoot_conf[0.731, 0.249, 0.020, 0.000].wav
+2025-10-25 18:43:26,049 - INFO - Processing: 055_background_conf[0.050, 0.029, 0.921, 0.000].wav
+2025-10-25 18:43:26,240 - INFO - Created 23 augmentations for 055_background_conf[0.050, 0.029, 0.921, 0.000].wav
+2025-10-25 18:43:26,240 - INFO - Processing: 055_shalom_conf[0.003, 0.928, 0.068, 0.000].wav
+2025-10-25 18:43:26,427 - INFO - Created 23 augmentations for 055_shalom_conf[0.003, 0.928, 0.068, 0.000].wav
+2025-10-25 18:43:26,427 - INFO - Processing: 056_background_conf[0.037, 0.002, 0.961, 0.000].wav
+2025-10-25 18:43:26,626 - INFO - Created 23 augmentations for 056_background_conf[0.037, 0.002, 0.961, 0.000].wav
+2025-10-25 18:43:26,626 - INFO - Processing: 057_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:26,809 - INFO - Created 23 augmentations for 057_lehitraoot_conf[1.000, 0.000, 0.000, 0.000].wav
+2025-10-25 18:43:26,809 - INFO - Processing: 057_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:27,003 - INFO - Created 23 augmentations for 057_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:27,004 - INFO - Processing: 058_lehitraoot_conf[0.665, 0.000, 0.335, 0.000].wav
+2025-10-25 18:43:27,195 - INFO - Created 23 augmentations for 058_lehitraoot_conf[0.665, 0.000, 0.335, 0.000].wav
+2025-10-25 18:43:27,196 - INFO - Processing: 058_lehitraoot_conf[0.806, 0.163, 0.029, 0.002].wav
+2025-10-25 18:43:27,386 - INFO - Created 23 augmentations for 058_lehitraoot_conf[0.806, 0.163, 0.029, 0.002].wav
+2025-10-25 18:43:27,386 - INFO - Processing: 059_lehitraoot_conf[0.641, 0.046, 0.311, 0.002].wav
+2025-10-25 18:43:27,581 - INFO - Created 23 augmentations for 059_lehitraoot_conf[0.641, 0.046, 0.311, 0.002].wav
+2025-10-25 18:43:27,581 - INFO - Processing: 060_shalom_conf[0.003, 0.997, 0.000, 0.000].wav
+2025-10-25 18:43:27,981 - INFO - Created 23 augmentations for 060_shalom_conf[0.003, 0.997, 0.000, 0.000].wav
+2025-10-25 18:43:27,981 - INFO - Processing: 061_lehitraoot_conf[0.625, 0.022, 0.353, 0.000].wav
+2025-10-25 18:43:28,201 - INFO - Created 23 augmentations for 061_lehitraoot_conf[0.625, 0.022, 0.353, 0.000].wav
+2025-10-25 18:43:28,202 - INFO - Processing: 062_shalom_conf[0.000, 0.969, 0.031, 0.000].wav
+2025-10-25 18:43:28,401 - INFO - Created 23 augmentations for 062_shalom_conf[0.000, 0.969, 0.031, 0.000].wav
+2025-10-25 18:43:28,402 - INFO - Processing: 063_background_conf[0.005, 0.001, 0.994, 0.000].wav
+2025-10-25 18:43:28,611 - INFO - Created 23 augmentations for 063_background_conf[0.005, 0.001, 0.994, 0.000].wav
+2025-10-25 18:43:28,611 - INFO - Processing: 064_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:28,822 - INFO - Created 23 augmentations for 064_shalom_conf[0.000, 1.000, 0.000, 0.000].wav
+2025-10-25 18:43:28,823 - INFO - Processing: 065_shalom_conf[0.001, 0.999, 0.000, 0.000].wav
+2025-10-25 18:43:29,020 - INFO - Created 23 augmentations for 065_shalom_conf[0.001, 0.999, 0.000, 0.000].wav
+2025-10-25 18:43:29,020 - INFO - Processing: 066_lehitraoot_conf[0.563, 0.070, 0.367, 0.000].wav
+2025-10-25 18:43:29,228 - INFO - Created 23 augmentations for 066_lehitraoot_conf[0.563, 0.070, 0.367, 0.000].wav
+2025-10-25 18:43:29,229 - INFO - Processing: 067_background_conf[0.040, 0.018, 0.941, 0.000].wav
+2025-10-25 18:43:29,418 - INFO - Created 23 augmentations for 067_background_conf[0.040, 0.018, 0.941, 0.000].wav
+2025-10-25 18:43:29,419 - INFO - Processing: 068_background_conf[0.085, 0.014, 0.901, 0.000].wav
+2025-10-25 18:43:29,617 - INFO - Created 23 augmentations for 068_background_conf[0.085, 0.014, 0.901, 0.000].wav
+2025-10-25 18:43:29,618 - INFO - Processing: 068_lehitraoot_conf[0.947, 0.053, 0.000, 0.000].wav
+2025-10-25 18:43:29,812 - INFO - Created 23 augmentations for 068_lehitraoot_conf[0.947, 0.053, 0.000, 0.000].wav
+2025-10-25 18:43:29,812 - INFO - Processing: 069_shalom_conf[0.109, 0.538, 0.350, 0.002].wav
+2025-10-25 18:43:30,002 - INFO - Created 23 augmentations for 069_shalom_conf[0.109, 0.538, 0.350, 0.002].wav
+2025-10-25 18:43:30,002 - INFO - Processing: 070_background_conf[0.008, 0.006, 0.986, 0.000].wav
+2025-10-25 18:43:30,200 - INFO - Created 23 augmentations for 070_background_conf[0.008, 0.006, 0.986, 0.000].wav
+2025-10-25 18:43:30,201 - INFO - Processing: 071_lehitraoot_conf[0.618, 0.005, 0.377, 0.000].wav
+2025-10-25 18:43:30,405 - INFO - Created 23 augmentations for 071_lehitraoot_conf[0.618, 0.005, 0.377, 0.000].wav
+2025-10-25 18:43:30,405 - INFO - Processing: 077_background_conf[0.029, 0.002, 0.969, 0.000].wav
+2025-10-25 18:43:30,605 - INFO - Created 23 augmentations for 077_background_conf[0.029, 0.002, 0.969, 0.000].wav
+2025-10-25 18:43:30,605 - INFO - Processing: 079_shalom_conf[0.022, 0.977, 0.001, 0.000].wav
+2025-10-25 18:43:30,799 - INFO - Created 23 augmentations for 079_shalom_conf[0.022, 0.977, 0.001, 0.000].wav
+2025-10-25 18:43:30,799 - INFO - Processing: 080_shalom_conf[0.000, 0.980, 0.020, 0.000].wav
+2025-10-25 18:43:30,995 - INFO - Created 23 augmentations for 080_shalom_conf[0.000, 0.980, 0.020, 0.000].wav
+2025-10-25 18:43:30,995 - INFO - Processing: shalom_001.wav
+2025-10-25 18:43:31,187 - INFO - Created 23 augmentations for shalom_001.wav
+2025-10-25 18:43:31,187 - INFO - Processing: shalom_002.wav
+2025-10-25 18:43:31,380 - INFO - Created 23 augmentations for shalom_002.wav
+2025-10-25 18:43:31,380 - INFO - Processing: shalom_003.wav
+2025-10-25 18:43:31,598 - INFO - Created 23 augmentations for shalom_003.wav
+2025-10-25 18:43:31,598 - INFO - Processing: shalom_004.wav
+2025-10-25 18:43:31,802 - INFO - Created 23 augmentations for shalom_004.wav
+2025-10-25 18:43:31,802 - INFO - Processing: shalom_006.wav
+2025-10-25 18:43:31,995 - INFO - Created 23 augmentations for shalom_006.wav
+2025-10-25 18:43:31,995 - INFO - Processing: shalom_007.wav
+2025-10-25 18:43:32,199 - INFO - Created 23 augmentations for shalom_007.wav
+2025-10-25 18:43:32,199 - INFO - Processing: shalom_008.wav
+2025-10-25 18:43:32,413 - INFO - Created 23 augmentations for shalom_008.wav
+2025-10-25 18:43:32,413 - INFO - Processing: shalom_009.wav
+2025-10-25 18:43:32,613 - INFO - Created 23 augmentations for shalom_009.wav
+2025-10-25 18:43:32,613 - INFO - Processing: shalom_010.wav
+2025-10-25 18:43:32,805 - INFO - Created 23 augmentations for shalom_010.wav
+2025-10-25 18:43:32,805 - INFO - Processing: shalom_011.wav
+2025-10-25 18:43:32,997 - INFO - Created 23 augmentations for shalom_011.wav
+2025-10-25 18:43:32,997 - INFO - Processing: shalom_012.wav
+2025-10-25 18:43:33,186 - INFO - Created 23 augmentations for shalom_012.wav
+2025-10-25 18:43:33,186 - INFO - Processing: shalom_013.wav
+2025-10-25 18:43:33,563 - INFO - Created 23 augmentations for shalom_013.wav
+2025-10-25 18:43:33,563 - INFO - Processing: shalom_015.wav
+2025-10-25 18:43:33,747 - INFO - Created 23 augmentations for shalom_015.wav
+2025-10-25 18:43:33,747 - INFO - Processing: shalom_018.wav
+2025-10-25 18:43:33,934 - INFO - Created 23 augmentations for shalom_018.wav
+2025-10-25 18:43:33,934 - INFO - Processing: shalom_020.wav
+2025-10-25 18:43:34,129 - INFO - Created 23 augmentations for shalom_020.wav
+2025-10-25 18:43:34,129 - INFO - Processing: shalom_021.wav
+2025-10-25 18:43:34,327 - INFO - Created 23 augmentations for shalom_021.wav
+2025-10-25 18:43:34,328 - INFO - Processing: shalom_022.wav
+2025-10-25 18:43:34,519 - INFO - Created 23 augmentations for shalom_022.wav
+2025-10-25 18:43:34,520 - INFO - Processing: shalom_023.wav
+2025-10-25 18:43:34,716 - INFO - Created 23 augmentations for shalom_023.wav
+2025-10-25 18:43:34,717 - INFO - Processing: shalom_025.wav
+2025-10-25 18:43:34,927 - INFO - Created 23 augmentations for shalom_025.wav
+2025-10-25 18:43:34,928 - INFO - Processing: shalom_027.wav
+2025-10-25 18:43:35,136 - INFO - Created 23 augmentations for shalom_027.wav
+2025-10-25 18:43:35,137 - INFO - Processing: shalom_029.wav
+2025-10-25 18:43:35,334 - INFO - Created 23 augmentations for shalom_029.wav
+2025-10-25 18:43:35,334 - INFO - Processing: shalom_030.wav
+2025-10-25 18:43:35,531 - INFO - Created 23 augmentations for shalom_030.wav
+2025-10-25 18:43:35,531 - INFO - Processing: shalom_031.wav
+2025-10-25 18:43:35,737 - INFO - Created 23 augmentations for shalom_031.wav
+2025-10-25 18:43:35,738 - INFO - Processing: shalom_032.wav
+2025-10-25 18:43:35,952 - INFO - Created 23 augmentations for shalom_032.wav
+2025-10-25 18:43:35,952 - INFO - Processing: shalom_033.wav
+2025-10-25 18:43:36,154 - INFO - Created 23 augmentations for shalom_033.wav
+2025-10-25 18:43:36,154 - INFO - Processing: shalom_034.wav
+2025-10-25 18:43:36,357 - INFO - Created 23 augmentations for shalom_034.wav
+2025-10-25 18:43:36,358 - INFO - Class shalom completed: 2064 total files (24.0x expansion)
+2025-10-25 18:43:36,358 - INFO - 
+Processing word: unknown
+2025-10-25 18:43:36,359 - INFO - Found 140 WAV files
+2025-10-25 18:43:36,359 - INFO - Original samples: 140, Target: 1000
+2025-10-25 18:43:36,359 - INFO - Need 860 augmentations (6.1 per file)
+2025-10-25 18:43:36,453 - INFO - Copied 140 original files
+2025-10-25 18:43:36,454 - INFO - Processing: unknown.ct,_1.wav.65iup38h.ingestion-6cf964c67c-txfwr.wav
+2025-10-25 18:43:36,527 - INFO - Created 9 augmentations for unknown.ct,_1.wav.65iup38h.ingestion-6cf964c67c-txfwr.wav
+2025-10-25 18:43:47,080 - INFO - Class unknown completed: 1400 total files (10.0x expansion)
+2025-10-25 18:43:47,080 - INFO - 
+============================================================
+2025-10-25 18:43:47,080 - INFO - AUGMENTATION COMPLETED
+2025-10-25 18:43:47,081 - INFO - ============================================================
+2025-10-25 18:43:47,081 - INFO - Files processed: 301
+2025-10-25 18:43:47,081 - INFO - Augmentations created: 4963
+2025-10-25 18:43:47,081 - INFO - Total files: 5264
+2025-10-25 18:43:47,081 - INFO - Augmented files saved to: ..\augmented_dataset
+2025-10-25 18:43:47,081 - INFO - Processing time: 47.54 seconds (0.79 minutes)
+2025-10-25 18:43:47,082 - INFO - Errors: 0
+2025-10-25 18:43:47,082 - INFO - 
+Class Statistics:
+2025-10-25 18:43:47,082 - INFO -   background: 584 files (1.0x expansion)
+2025-10-25 18:43:47,082 - INFO -   lehitraoot: 1800 files (24.0x expansion)
+2025-10-25 18:43:47,082 - INFO -   shalom: 2064 files (24.0x expansion)
+2025-10-25 18:43:47,082 - INFO -   unknown: 1400 files (10.0x expansion)

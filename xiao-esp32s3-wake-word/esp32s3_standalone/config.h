@@ -14,7 +14,7 @@
 // ============================================================================
 
 // Window stride in milliseconds (reduced for faster response)
-#define WINDOW_STRIDE_MS 100
+#define WINDOW_STRIDE_MS 500
 
 // Window overlap ratio (from plan: 50% overlap)
 #define WINDOW_OVERLAP_RATIO 0.5f
@@ -36,7 +36,7 @@
 #define DETECTION_CONFIDENCE_THRESHOLD CONFIDENCE_THRESHOLD
 
 // Cooldown period to prevent duplicate detections (milliseconds)
-#define DETECTION_COOLDOWN_MS 100
+#define DETECTION_COOLDOWN_MS 300
 
 // ============================================================================
 // MEMORY ALLOCATION
