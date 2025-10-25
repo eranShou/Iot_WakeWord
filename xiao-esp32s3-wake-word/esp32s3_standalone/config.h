@@ -13,8 +13,8 @@
 // SLIDING WINDOW CONFIGURATION
 // ============================================================================
 
-// Window stride in milliseconds (from plan: 500ms intervals)
-#define WINDOW_STRIDE_MS 500
+// Window stride in milliseconds (reduced for faster response)
+#define WINDOW_STRIDE_MS 100
 
 // Window overlap ratio (from plan: 50% overlap)
 #define WINDOW_OVERLAP_RATIO 0.5f
@@ -36,7 +36,7 @@
 #define DETECTION_CONFIDENCE_THRESHOLD CONFIDENCE_THRESHOLD
 
 // Cooldown period to prevent duplicate detections (milliseconds)
-#define DETECTION_COOLDOWN_MS 300
+#define DETECTION_COOLDOWN_MS 100
 
 // ============================================================================
 // MEMORY ALLOCATION

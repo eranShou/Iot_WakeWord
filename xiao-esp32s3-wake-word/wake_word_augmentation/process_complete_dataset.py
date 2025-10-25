@@ -3,8 +3,9 @@ Complete Dataset Processing for ESP32 Wake Word Detection
 Conservative augmentation strategy that preserves ESP32 microphone characteristics.
 
 Processing approach:
-- Wake word directories (lehitraoot, shalom, bait): Apply augmentation to reach target sample count
-- Unknown and background directories: Copy as-is without augmentation
+- Wake word directories (lehitraoot, shalom, bait): Apply augmentation to reach target sample count (2250)
+- Unknown directory: Apply augmentation to reach target sample count (1000)
+- Background directory: Copy as-is without augmentation
 - Light time stretching: 0.9x-1.1x (±10% maximum) - simulates natural speech rate differences
 - Background noise mixing: 25-35 dB SNR - very subtle noise at ESP32 level
 - Preserves device-specific noise floor and frequency response characteristics
@@ -256,20 +257,24 @@ class AudioAugmentor:
             logger.error(f"Error copying directory {src_dir} to {dest_dir}: {e}")
             raise
     
-    def calculate_augmentation_strategy(self, original_count: int) -> dict:
+    def calculate_augmentation_strategy(self, original_count: int, target_samples: int = None) -> dict:
         """
         Calculate augmentation strategy based on target samples and original count.
         
         Args:
             original_count: Number of original samples
+            target_samples: Target number of samples (uses self.target_samples if None)
             
         Returns:
             Dictionary with augmentation parameters
         """
-        needed_augmentations = self.target_samples - original_count
+        if target_samples is None:
+            target_samples = self.target_samples
+        
+        needed_augmentations = target_samples - original_count
         augmentations_per_file = needed_augmentations / original_count
         
-        logger.info(f"Original samples: {original_count}, Target: {self.target_samples}")
+        logger.info(f"Original samples: {original_count}, Target: {target_samples}")
         logger.info(f"Need {needed_augmentations} augmentations ({augmentations_per_file:.1f} per file)")
         
         # Determine strategy based on expansion ratio
@@ -411,8 +416,8 @@ class AudioAugmentor:
         logger.info(f"Available noise files: {len(self.noise_files)}")
         logger.info(f"Target samples per class: {self.target_samples}")
         
-        # Copy unknown and background directories as-is (no augmentation)
-        copy_dirs = ["unknown", "background"]
+        # Copy background directory as-is (no augmentation)
+        copy_dirs = ["background"]
         for copy_dir_name in copy_dirs:
             copy_dir = self.data_dir / copy_dir_name
             if copy_dir.exists():
@@ -435,9 +440,9 @@ class AudioAugmentor:
             else:
                 logger.warning(f"{copy_dir_name} directory not found, skipping")
         
-        # Find all word directories (exclude noise, augmented, unknown, and background directories)
+        # Find all word directories (exclude noise, augmented, and background directories)
         word_dirs = [d for d in self.data_dir.iterdir() 
-                    if d.is_dir() and d.name not in ["noise", "augmented", "unknown", "background"]]
+                    if d.is_dir() and d.name not in ["noise", "augmented", "background"]]
         
         if not word_dirs:
             logger.error(f"No word directories found in {self.data_dir}")
@@ -459,7 +464,13 @@ class AudioAugmentor:
             logger.info(f"Found {len(wav_files)} WAV files")
             
             # Calculate augmentation strategy for this class
-            strategy = self.calculate_augmentation_strategy(len(wav_files))
+            # Special handling: unknown class uses target of 1000 instead of 2250
+            if word_dir.name == "unknown":
+                target_for_this_class = 1000
+            else:
+                target_for_this_class = self.target_samples
+            
+            strategy = self.calculate_augmentation_strategy(len(wav_files), target_for_this_class)
             
             # Copy original files first
             original_copied = 0

@@ -9,7 +9,7 @@ import os
 import sys
 import time
 from pathlib import Path
-
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 def load_config():
     """Load configuration from config.json"""
     with open('config.json', 'r') as f:
@@ -146,7 +146,7 @@ def run_training_pipeline():
         # Step 5: Train model
         print(f"\n{'='*20} STEP 3: TRAIN MODEL {'='*20}")
         from train_model import train_model
-        model, history = train_model()
+        model, history = train_model(train_ds, val_ds, class_weights)
         print("✓ Model training completed")
         
         # Step 6: Convert to TFLite
