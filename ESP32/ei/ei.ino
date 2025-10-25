@@ -1,3 +1,5 @@
+
+
 /* Edge Impulse Arduino examples
  * Copyright (c) 2022 EdgeImpulse Inc.
  *
@@ -44,7 +46,7 @@
   
 
 /* Includes ---------------------------------------------------------------- */
-#include <XiaoS3-wakeword-ivirit-ai_inferencing.h>
+#include <unkown_sim_inferencing.h>
 
 
 #include <I2S.h>
