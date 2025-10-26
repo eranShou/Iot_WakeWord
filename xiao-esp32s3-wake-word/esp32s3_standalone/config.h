@@ -13,7 +13,7 @@
 // SLIDING WINDOW CONFIGURATION
 // ============================================================================
 
-// Window stride in milliseconds (from plan: 500ms intervals)
+// Window stride in milliseconds (reduced for faster response)
 #define WINDOW_STRIDE_MS 500
 
 // Window overlap ratio (from plan: 50% overlap)

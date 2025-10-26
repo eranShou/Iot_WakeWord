@@ -9,6 +9,7 @@ import os
 import sys
 import time
 from pathlib import Path
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 def load_config():
     """Load configuration from config.json"""
@@ -146,7 +147,7 @@ def run_training_pipeline():
         # Step 5: Train model
         print(f"\n{'='*20} STEP 3: TRAIN MODEL {'='*20}")
         from train_model import train_model
-        model, history = train_model()
+        model, history = train_model(train_ds, val_ds, class_weights)
         print("✓ Model training completed")
         
         # Step 6: Convert to TFLite
@@ -193,9 +194,11 @@ def run_training_pipeline():
         print(f"- Config header: {config_header}")
         print(f"")
         print(f"Next steps:")
-        print(f"1. Check esp32s3_deployment/ folder for Arduino files")
-        print(f"2. Upload esp32s3_deployment.ino to your XIAO ESP32-S3")
-        print(f"3. Use record_audio.py to receive predictions")
+        print(f"1. Check both esp32s3_deployment/ and esp32s3_standalone/ folders for Arduino files")
+        print(f"2. Choose your project type:")
+        print(f"   a) For deployment with PC communication: Upload esp32s3_deployment.ino")
+        print(f"   b) For standalone operation: Upload esp32s3_standalone.ino")
+        print(f"3. Use record_audio.py to receive predictions (deployment mode only)")
         
         return True
         

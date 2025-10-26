@@ -69,18 +69,22 @@ def create_model(config):
     
     return model
 
-def train_model():
+def train_model(train_dataset=None, val_dataset=None, class_weights=None):
     """
     Main training function
+    Can accept pre-prepared datasets or prepare them if not provided
     """
     config = load_config()
     
     print("Starting model training...")
     print("=" * 50)
     
-    # Prepare datasets
-    print("Preparing datasets...")
-    train_dataset, val_dataset, class_weights = prepare_datasets()
+    # Prepare datasets only if not provided
+    if train_dataset is None or val_dataset is None or class_weights is None:
+        print("Preparing datasets...")
+        train_dataset, val_dataset, class_weights = prepare_datasets()
+    else:
+        print("Using pre-prepared datasets...")
     
     # Create model
     print("\nCreating model...")

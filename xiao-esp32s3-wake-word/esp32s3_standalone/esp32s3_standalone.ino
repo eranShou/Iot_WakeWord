@@ -193,7 +193,7 @@ void loop() {
     #endif
     
     // Small delay to prevent overwhelming the system
-    delay(10);
+    delay(5);
 }
 
 // ============================================================================
@@ -220,9 +220,12 @@ void processAudioWindow() {
     int predictedClass = inferenceEngine.getBestClass(probabilities, confidence);
     
     // Check if detection meets confidence threshold and is not background
-    if (confidence >= DETECTION_CONFIDENCE_THRESHOLD && predictedClass != CLASS_NOISE) {
+    // Also check cooldown period to prevent duplicate detections
+    unsigned long currentTime = millis();
+    bool cooldownExpired = (currentTime - lastDetectionTime) >= DETECTION_COOLDOWN_MS;
+    
+    if (confidence >= DETECTION_CONFIDENCE_THRESHOLD && predictedClass != CLASS_NOISE && cooldownExpired) {
         detectionCount++;
-        unsigned long currentTime = millis();
         lastDetectionTime = currentTime;
         
         Serial.printf("*** WAKE WORD DETECTED #%lu ***\n", detectionCount);

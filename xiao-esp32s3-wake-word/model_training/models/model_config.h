@@ -1,7 +1,7 @@
 /*
  * Model Configuration Header
  * Auto-generated from config.json
- * Generated: 2025-10-24 21:37:01
+ * Generated: 2025-10-25 18:49:55
  * 
  * This file contains all configuration parameters for ESP32-S3 deployment.
  * These values are guaranteed to match the training configuration.
@@ -34,7 +34,7 @@
 // ============================================================================
 
 #define NUM_CLASSES 4
-#define CONFIDENCE_THRESHOLD 0.7
+#define CONFIDENCE_THRESHOLD 0.5
 #define TENSOR_ARENA_SIZE 8000
 
 // Model input shape
