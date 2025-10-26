@@ -43,20 +43,25 @@
 ## ESP32 SDK version used in this project: 
 ei: 2.0.16
 record to sd: 3.3.0
-tensorflow Lite Micro:  
+tensorflow Lite Micro MFCC & STFT: 2.0.16  
 
 
 ## Arduino/ESP32 libraries used in this project:
 for record to sd:
 * ESP_I2S.h ( part of the 3.3.0 ESP32 SDK)
-* FS.h
-* SD.h
+* FS.h (part of the 3.3.0 ESP32 SDK)
+* SD.h (part of arduino core)
 
 for edge impulse:
-* I2S.h
+* I2S.h ( part of the 2.0.16 ESP32 SDK)
 * ei costume library
 
-TensorFlow Lite Micro:
+TensorFlow Lite Micro MFCC:
+* I2S.h ( part of the 2.0.16 ESP32 SDK)
+* arduinoFFT.h v2.0.4
+* math.h (part of arduino core)
+* tflm_esp32.h v2.0.0
+* eloquent_tinyml.h v3.0.1
 
 
 
