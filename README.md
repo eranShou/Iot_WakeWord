@@ -31,6 +31,43 @@
 3. flush the code in the tflm directory to your controller
 4. notes - the mfcc is basic and less accurate than other options
 
+### 4. TF Lite Micro - STFT (xiao-esp32s3-wake-word)
+1. **data collection**:
+   - code in `xiao-esp32s3-wake-word/audio_recorder_esp32_pc/audio_recorder_esp32_pc.ino` for ESP32 and `record_audio.py` for PC
+   - records audio samples directly from XIAO ESP32S3 to PC via USB - no SD card or external microphone required (uses built-in PDM mic)
+   - upload the arduino sketch to your ESP32S3, then run `python record_audio.py` on PC
+   - features: streams audio to PC, saves as WAV files, custom recording duration (1-60 seconds)
+   - notes: uses ESP32 SDK version 2.0.16
+
+2. **data augmentation**:
+   - code in `xiao-esp32s3-wake-word/wake_word_augmentation/process_complete_dataset.py`
+   - conservative ESP32-focused augmentation approach
+   - techniques: time stretching (±10% speed variations), background noise mixing (25-35 dB SNR)
+   - usage: `python process_complete_dataset.py`
+
+3. **model training**:
+   - code in `xiao-esp32s3-wake-word/model_training/` directory
+   - uses STFT (not MFCC) for spectrogram generation with CNN architecture (32×32 spectrogram input)
+   - all parameters controlled by `config.json` - classes, data paths, model architecture, training settings (read the file to understand all available options)
+   - usage: `python run_pipeline.py` for complete training pipeline
+   - output: TFLite model and C headers for ESP32 deployment
+
+4. **deployment - two modes**:
+   
+   **Mode 1: ESP32S3 Deployment (with PC transmission)**:
+   - code in `xiao-esp32s3-wake-word/esp32s3_deployment/esp32s3_deployment.ino`
+   - receives audio → runs inference → sends audio + predictions to PC via serial
+   - features: continuous listening, 4-class detection, WAV files sent to PC with confidence scores
+   - usage: upload `esp32s3_deployment.ino` and run `python receiver.py` on PC
+   - notes: uses ESP32 SDK version 2.0.16
+
+   **Mode 2: ESP32S3 Standalone**:
+   - code in `xiao-esp32s3-wake-word/esp32s3_standalone/esp32s3_standalone.ino`
+   - receives audio → runs inference → prints results to Serial Monitor (no PC needed)
+   - features: standalone operation, LED feedback on detection, local inference only
+   - usage: upload `esp32s3_standalone.ino` and monitor Serial output
+   - notes: uses ESP32 SDK version 2.0.16
+
 
 ## Folder description :
 * ESP32: source code for the esp side (firmware).
@@ -39,11 +76,12 @@
 * flutter_app : dart code for our Flutter app.
 * Parameters: contains description of parameters and settings that can be modified IN YOUR CODE
 * Assets: link to 3D printed parts, Audio files used in this project, Fritzing file for connection diagram (FZZ format) etc
+* xiao-esp32s3-wake-word: Complete TensorFlow Lite Micro wake word detection pipeline using STFT spectrograms with data collection, augmentation, training, and two deployment modes
 
 ## ESP32 SDK version used in this project: 
 ei: 2.0.16
 record to sd: 3.3.0
-tensorflow Lite Micro:  
+tensorflow Lite Micro model: 2.0.16 (audio_recorder_esp32_pc, esp32s3_deployment, esp32s3_standalone)  
 
 
 ## Arduino/ESP32 libraries used in this project:
@@ -57,10 +95,10 @@ for edge impulse:
 * ei costume library
 
 TensorFlow Lite Micro:
+* I2S.h
+* TensorFlowLite_ESP32 (for inference in deployment/standalone)
 
 
-
-## Connection diagram:
 
 ## Project Poster:
  
