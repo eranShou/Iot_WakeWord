@@ -9,10 +9,7 @@ tensorflow_wake_word_detection/processed_data/
 # Ivrit-ai dataset outputs and secrets
 ivrit-ai dataset/audio_v2_downloaded/
 ivrit-ai dataset/transcripts_v2_downloaded/
-ivrit-ai dataset/noise/
 ivrit-ai dataset/word_clips/
-ivrit-ai dataset/random_word_snippets
-ivrit-ai dataset/secrets.py
 ivrit-ai dataset/__pycache__
 venv/
 
