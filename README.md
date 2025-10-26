@@ -14,8 +14,16 @@
 
     #### using ivrit.ai
     ivrit.ai is an open source project for generation of Hebrew speech samples through processing and segmentation of transcribed podcast recordings `https://www.ivrit.ai/`
-    1. code to the API to generate dataset in hebrew - `ivrit-ai dataset/IvritAiDataFetch.py`
-    2. usage: 
+    1. The data itself is in https://huggingface.co/ivrit-ai so our fetcher uses huggingface API. 
+    2. code to the API to generate dataset in hebrew - `ivrit-ai dataset/IvritAiDataFetch.py`
+    2. usage:
+      1.  create a user in https://huggingface.co/ and generate a READ API key, paste it in secrets.py
+      2. requirements are in ivrit-ai/requirements.txt, note the comment about ffmpeg.
+      3. parameters:
+         1. base_dir will be the place where the data will be saved. default is running folder
+         2. buffer_ms is the the buffer each snipet, the deffault is 50ms.
+      4. basic usage example is in the class main. 
+   
 
 
 ### 2. edge impulse model
