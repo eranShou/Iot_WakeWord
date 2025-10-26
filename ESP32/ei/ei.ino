@@ -114,7 +114,6 @@ void setup() {
   Serial.println("Edge Impulse Inferencing Demo");
   
   //Print CSV Header
-  ei_printf("CSV_LOG:Index,Predicted_Label,Confidence,DSP_ms,Classification_ms");
   #if EI_CLASSIFIER_HAS_ANOMALY == 1
     ei_printf(",Anomaly_Score");
   #endif
